@@ -164,77 +164,125 @@ class DataKnowledgeGraphBuilder:
             node_properties=["start_date", "end_date", "level", "years_experience"],
             strict_mode=True,
             additional_instructions="""
-            If a job title contains words like Junior, Mid, Senior, Lead:
-            - Extract Seniority as a separate node (Seniority)
-            - Connect Person -> HAS_SENIORITY -> Seniority
+            Use strict seniority extraction rules:
+            - If newest job title contains 'Intern' -> Seniority = Intern
+            - If newest job title contains 'Junior' -> Seniority = Junior
+            - If newest job title contains 'Senior' or 'Lead' -> Seniority = Senior
+            - If newest job title contains 'Mid' or 'Mid-level' -> Seniority = Mid
+            - Otherwise assume Mid
+
+            Always create exactly ONE Seniority node per Person.
+            Always create Person -> HAS_SENIORITY -> Seniority
             
-            If the question is about RFP, projects, requirements, or missing skills:
-            - Use RFP nodes
-            - Compare required skills with Person skills
-            - If asking for best candidate, rank candidates by number of matched required skills
+            
+            - If a work experience entry contains a job title (e.g., "Software Engineer", "Senior Developer", etc.), create a JobTitle node.
+            - If the entry contains a company name, create a Company node and connect Person -> WORKED_AT -> Company.
+            - Do not confuse Company with JobTitle.
+            - If the experience entry includes a date range, store it on the relationship:
+                Person -[:WORKED_AT {{start_date, end_date, is_current}}]-> Company
+                Person -[:HOLDS_POSITION {{start_date, end_date, is_current}}]-> JobTitle
+            - If end_date is "Present" or "Now", set is_current = true and treat this job as the latest.
+            - Always create both JobTitle and Company nodes if both exist in the entry.
             """
         )
 
         logger.info("✓ LLM Graph Transformer initialized with CV schema")
 
     def extract_text_from_pdf(self, pdf_path: str) -> str:
-        """Extract text content from PDF using unstructured.
-
-        Args:
-            pdf_path: Path to the PDF file
-
-        Returns:
-            str: Extracted text content
-        """
+        """Extract text content from PDF using unstructured."""
         try:
-            # Use unstructured to parse PDF
             elements = partition_pdf(filename=pdf_path)
-
-            # Combine all text elements into single document
-            # This is crucial - processing as single document maintains context
             full_text = "\n\n".join([str(element) for element in elements])
-
             logger.debug(f"Extracted {len(full_text)} characters from {pdf_path}")
             return full_text
-
         except Exception as e:
             logger.error(f"Failed to extract text from {pdf_path}: {e}")
             return ""
 
-    async def convert_cv_to_graph(self, pdf_path: str) -> List:
-        """Convert a single CV PDF to graph documents.
+    def normalize_seniority(self, title: str) -> str:
+        title_low = title.lower()
+        if "intern" in title_low:
+            return "Intern"
+        if "junior" in title_low:
+            return "Junior"
+        if "lead" in title_low or "senior" in title_low:
+            return "Senior"
+        if "mid" in title_low:
+            return "Mid"
+        return "Mid"
 
-        Args:
-            pdf_path: Path to the PDF file
-
-        Returns:
-            List: Graph documents extracted from the CV
+    def get_latest_job_title(self, graph_document):
         """
+        Extract latest job title from graph_document.
+        Assumption: first HOLDS_POSITION relationship corresponds to newest job.
+        """
+        for rel in graph_document.relationships:
+            if rel.type == "HOLDS_POSITION":
+                # in your model, rel.target is the JobTitle node
+                return rel.target
+        return None
+
+    async def convert_cv_to_graph(self, pdf_path: str) -> List:
+        """Convert a single CV PDF to graph documents."""
         logger.info(f"Processing: {Path(pdf_path).name}")
 
-        # Extract text from PDF
         text_content = self.extract_text_from_pdf(pdf_path)
-
         if not text_content.strip():
             logger.warning(f"No text extracted from {pdf_path}")
             return []
 
-        # Create Document object
         document = Document(
             page_content=text_content,
             metadata={"source": pdf_path, "type": "cv"}
         )
 
-        # Convert to graph documents using LLM
         try:
             graph_documents = await self.llm_transformer.aconvert_to_graph_documents([document])
             logger.info(f"✓ Extracted graph from {Path(pdf_path).name}")
 
-            # Log extraction statistics
-            if graph_documents:
-                nodes_count = len(graph_documents[0].nodes)
-                relationships_count = len(graph_documents[0].relationships)
-                logger.info(f"  - Nodes: {nodes_count}, Relationships: {relationships_count}")
+            # Normalize seniority based on latest job title
+            for gd in graph_documents:
+                print(set([n.type for n in gd.nodes]))
+
+                person_nodes = [n for n in gd.nodes if n.type == "Person"]
+                if not person_nodes:
+                    continue
+                person = person_nodes[0]
+
+                latest_job = self.get_latest_job_title(gd)
+                if not latest_job:
+                    continue
+
+                seniority_value = self.normalize_seniority(latest_job.id)
+
+                # Check if Seniority node already exists
+                existing_seniority_nodes = [n for n in gd.nodes if n.type == "Seniority"]
+                seniority_node = None
+
+                if existing_seniority_nodes:
+                    seniority_node = existing_seniority_nodes[0]
+                    seniority_node.id = seniority_value
+                    seniority_node.properties["id"] = seniority_value
+                    seniority_node.properties["name"] = seniority_value
+                else:
+                    # Create Seniority node
+                    seniority_node = type(latest_job)(id=seniority_value, type="Seniority",
+                                                      properties={"id": seniority_value, "name": seniority_value})
+                    gd.nodes.append(seniority_node)
+
+                # Remove any existing HAS_SENIORITY relations from this person
+                gd.relationships = [
+                    rel for rel in gd.relationships
+                    if not (rel.type == "HAS_SENIORITY" and rel.source.id == person.id)
+                ]
+
+                # Create relationship
+                gd.relationships.append(type(gd.relationships[0])(
+                    source=person,
+                    target=seniority_node,
+                    type="HAS_SENIORITY",
+                    properties={}
+                ))
 
             return graph_documents
 
@@ -242,23 +290,14 @@ class DataKnowledgeGraphBuilder:
             logger.error(f"Failed to convert {pdf_path} to graph: {e}")
             return []
 
+
     async def process_all_cvs(self, cv_directory: str = None) -> int:
-        """Process all PDF CVs in the directory.
-
-        Args:
-            cv_directory: Directory containing PDF CVs (defaults to config value)
-
-        Returns:
-            int: Number of successfully processed CVs
-        """
-        # Use config directory if not specified
+        """Process all PDF CVs in the directory."""
         if cv_directory is None:
             cv_directory = self.config['output']['programmers_dir']
 
-        # Find all PDF files
-        pdf_pattern = os.path.join(cv_directory, "*.pdf")
-        pdf_files = glob(pdf_pattern)
-
+        pdf_files = glob(os.path.join(cv_directory, "*.pdf"))
+        pdf_files = pdf_files[:5]
         if not pdf_files:
             logger.error(f"No PDF files found in {cv_directory}")
             return 0
@@ -268,17 +307,14 @@ class DataKnowledgeGraphBuilder:
         processed_count = 0
         all_graph_documents = []
 
-        # Process each CV
         for pdf_path in pdf_files:
             graph_documents = await self.convert_cv_to_graph(pdf_path)
-
             if graph_documents:
                 all_graph_documents.extend(graph_documents)
                 processed_count += 1
             else:
                 logger.warning(f"Failed to process {pdf_path}")
 
-        # Store all graph documents in Neo4j
         if all_graph_documents:
             logger.info("Storing graph documents in Neo4j...")
             self.store_graph_documents(all_graph_documents)
@@ -286,20 +322,14 @@ class DataKnowledgeGraphBuilder:
         return processed_count
 
     def store_graph_documents(self, graph_documents: List):
-        """Store graph documents in Neo4j.
-
-        Args:
-            graph_documents: List of GraphDocument objects
-        """
+        """Store graph documents in Neo4j."""
         try:
-            # Add graph documents to Neo4j with enhanced options
             self.graph.add_graph_documents(
                 graph_documents,
-                baseEntityLabel=True,  # Add base Entity label for indexing
-                include_source=True    # Include source documents for RAG
+                baseEntityLabel=True,
+                include_source=True
             )
 
-            # Calculate and log statistics
             total_nodes = sum(len(doc.nodes) for doc in graph_documents)
             total_relationships = sum(len(doc.relationships) for doc in graph_documents)
 
@@ -307,7 +337,6 @@ class DataKnowledgeGraphBuilder:
             logger.info(f"✓ Total nodes: {total_nodes}")
             logger.info(f"✓ Total relationships: {total_relationships}")
 
-            # Create useful indexes for performance
             self.create_indexes()
 
         except Exception as e:
@@ -334,7 +363,6 @@ class DataKnowledgeGraphBuilder:
         """Validate the created knowledge graph."""
         logger.info("Validating knowledge graph...")
 
-        # Basic statistics
         queries = {
             "Total nodes": "MATCH (n) RETURN count(n) as count",
             "Total relationships": "MATCH ()-[r]->() RETURN count(r) as count",
@@ -349,16 +377,14 @@ class DataKnowledgeGraphBuilder:
                     logger.info(f"{description}: {result[0]['count']}")
                 else:
                     logger.info(f"\n{description}:")
-                    for row in result[:10]:  # Show top 10
+                    for row in result[:10]:
                         if 'type' in row:
                             logger.info(f"  {row['type']}: {row['count']}")
                         else:
                             logger.info(f"  {row}")
-
             except Exception as e:
                 logger.error(f"Failed to execute validation query '{description}': {e}")
 
-        # Sample queries to verify extraction quality
         sample_queries = [
             "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill) RETURN p.id, s.id LIMIT 5",
             "MATCH (p:Person)-[:WORKED_AT]->(c:Company) RETURN p.id, c.id LIMIT 5"
@@ -398,7 +424,6 @@ class DataKnowledgeGraphBuilder:
             if not rfp_id:
                 continue
 
-            # Create RFP node
             self.graph.query(
                 """
                 MERGE (r:RFP {id: $id})
@@ -424,7 +449,6 @@ class DataKnowledgeGraphBuilder:
                 },
             )
 
-            # Create Requirements + Skill nodes
             for req in rfp.get("requirements", []):
                 req_id = f"{rfp_id}-{req.get('skill_name')}"
                 skill_name = req.get("skill_name")
@@ -442,7 +466,6 @@ class DataKnowledgeGraphBuilder:
                     },
                 )
 
-                # Skill node
                 self.graph.query(
                     """
                     MERGE (s:Skill {id: $skill})
@@ -450,7 +473,6 @@ class DataKnowledgeGraphBuilder:
                     {"skill": skill_name},
                 )
 
-                # Connect RFP -> Requirement -> Skill
                 self.graph.query(
                     """
                     MATCH (r:RFP {id: $rfp_id})
@@ -471,16 +493,11 @@ async def main():
     print("=" * 50)
 
     try:
-        # Initialize builder
         builder = DataKnowledgeGraphBuilder()
-
-        # Process all CVs
         processed_count = await builder.process_all_cvs()
 
         if processed_count > 0:
-            # Validate the graph
             builder.validate_graph()
-
             print(f"\n✓ Successfully processed {processed_count} CV(s)")
             print("✓ Knowledge graph created in Neo4j")
             print("\nNext steps:")
@@ -491,7 +508,6 @@ async def main():
             print("❌ No CVs were successfully processed")
             print("Please check the PDF files in data/cvs_pdf/ directory")
 
-        # Process RFP JSON
         rfp_json_path = builder.config['output']['rfps_dir'] + "/rfps.json"
         builder.convert_rfps_to_graph(rfp_json_path)
 
