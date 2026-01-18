@@ -126,7 +126,9 @@ class DataKnowledgeGraphBuilder:
         # Define CV-specific ontology
         self.allowed_nodes = [
             "Person", "Company", "University", "Skill", "Technology",
-            "Project", "Certification", "Location", "JobTitle", "Industry"
+            "Project", "Certification", "Location", "JobTitle", "Industry",
+            "Seniority",
+            "RFP", "Requirement", "Proficiency"
         ]
 
         # Define relationships with directional tuples
@@ -144,7 +146,14 @@ class DataKnowledgeGraphBuilder:
             ("Company", "IN_INDUSTRY", "Industry"),
             ("Skill", "RELATED_TO", "Technology"),
             ("Certification", "ISSUED_BY", "Company"),
-            ("University", "LOCATED_IN", "Location")
+            ("University", "LOCATED_IN", "Location"),
+
+            ("Person", "HAS_SENIORITY", "Seniority"),
+            ("RFP", "REQUIRES", "Requirement"),
+            ("Requirement", "REQUIRES_SKILL", "Skill"),
+            ("Requirement", "REQUIRES_PROFICIENCY", "Proficiency"),
+            ("Person", "HAS_SKILL", "Skill"),
+            ("Person", "HAS_PROFICIENCY", "Proficiency")
         ]
 
         # Initialize transformer with strict schema
@@ -153,7 +162,17 @@ class DataKnowledgeGraphBuilder:
             allowed_nodes=self.allowed_nodes,
             allowed_relationships=self.allowed_relationships,
             node_properties=["start_date", "end_date", "level", "years_experience"],
-            strict_mode=True
+            strict_mode=True,
+            additional_instructions="""
+            If a job title contains words like Junior, Mid, Senior, Lead:
+            - Extract Seniority as a separate node (Seniority)
+            - Connect Person -> HAS_SENIORITY -> Seniority
+            
+            If the question is about RFP, projects, requirements, or missing skills:
+            - Use RFP nodes
+            - Compare required skills with Person skills
+            - If asking for best candidate, rank candidates by number of matched required skills
+            """
         )
 
         logger.info("✓ LLM Graph Transformer initialized with CV schema")
@@ -354,6 +373,97 @@ class DataKnowledgeGraphBuilder:
             except Exception as e:
                 logger.debug(f"Sample query failed: {e}")
 
+    def load_rfps_from_json(self, json_path: str):
+        """Load RFPs from JSON file."""
+        import json
+
+        if not os.path.exists(json_path):
+            logger.error(f"RFP JSON not found: {json_path}")
+            return []
+
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        return data
+
+    def convert_rfps_to_graph(self, json_path: str):
+        """Convert RFP JSON into Neo4j nodes and relationships."""
+        rfps = self.load_rfps_from_json(json_path)
+        if not rfps:
+            logger.warning("No RFPs found.")
+            return
+
+        for rfp in rfps:
+            rfp_id = rfp.get("id")
+            if not rfp_id:
+                continue
+
+            # Create RFP node
+            self.graph.query(
+                """
+                MERGE (r:RFP {id: $id})
+                SET r.title = $title,
+                    r.client = $client,
+                    r.project_type = $project_type,
+                    r.duration_months = $duration_months,
+                    r.team_size = $team_size,
+                    r.budget_range = $budget_range,
+                    r.location = $location,
+                    r.remote_allowed = $remote_allowed
+                """,
+                {
+                    "id": rfp_id,
+                    "title": rfp.get("title"),
+                    "client": rfp.get("client"),
+                    "project_type": rfp.get("project_type"),
+                    "duration_months": rfp.get("duration_months"),
+                    "team_size": rfp.get("team_size"),
+                    "budget_range": rfp.get("budget_range"),
+                    "location": rfp.get("location"),
+                    "remote_allowed": rfp.get("remote_allowed"),
+                },
+            )
+
+            # Create Requirements + Skill nodes
+            for req in rfp.get("requirements", []):
+                req_id = f"{rfp_id}-{req.get('skill_name')}"
+                skill_name = req.get("skill_name")
+
+                self.graph.query(
+                    """
+                    MERGE (req:Requirement {id: $req_id})
+                    SET req.min_proficiency = $min_proficiency,
+                        req.is_mandatory = $is_mandatory
+                    """,
+                    {
+                        "req_id": req_id,
+                        "min_proficiency": req.get("min_proficiency"),
+                        "is_mandatory": req.get("is_mandatory"),
+                    },
+                )
+
+                # Skill node
+                self.graph.query(
+                    """
+                    MERGE (s:Skill {id: $skill})
+                    """,
+                    {"skill": skill_name},
+                )
+
+                # Connect RFP -> Requirement -> Skill
+                self.graph.query(
+                    """
+                    MATCH (r:RFP {id: $rfp_id})
+                    MATCH (req:Requirement {id: $req_id})
+                    MATCH (s:Skill {id: $skill})
+                    MERGE (r)-[:REQUIRES]->(req)
+                    MERGE (req)-[:REQUIRES_SKILL]->(s)
+                    """,
+                    {"rfp_id": rfp_id, "req_id": req_id, "skill": skill_name},
+                )
+
+        logger.info("✓ RFPs loaded into Neo4j successfully")
+
 
 async def main():
     """Main function to convert CVs to knowledge graph."""
@@ -380,6 +490,10 @@ async def main():
         else:
             print("❌ No CVs were successfully processed")
             print("Please check the PDF files in data/cvs_pdf/ directory")
+
+        # Process RFP JSON
+        rfp_json_path = builder.config['output']['rfps_dir'] + "/rfps.json"
+        builder.convert_rfps_to_graph(rfp_json_path)
 
     except Exception as e:
         logger.error(f"Failed to build knowledge graph: {e}")

@@ -273,7 +273,7 @@ Answer (concise, direct):"""
             api_times = [r.get("api_time_seconds", 0) for r in successful_results]
             avg_api_time = sum(api_times) / len(api_times) if api_times else 0
 
-            print(f"\n⏱️  TIMING DIAGNOSTICS:")
+            print(f"\n TIMING DIAGNOSTICS:")
             print(f"Total generation time: {total_time:.2f}s ({total_time/60:.2f} minutes)")
             print(f"Average per question: {avg_time:.2f}s")
             print(f"Average API time: {avg_api_time:.2f}s")
@@ -317,15 +317,15 @@ async def main():
         # Display summary
         generator.display_summary(ground_truth_data)
 
-        print(f"\n🎉 Ground truth generation complete!")
-        print(f"📁 Results saved to: {output_file}")
+        print(f"\n Ground truth generation complete!")
+        print(f" Results saved to: {output_file}")
         print(f"\nNext steps:")
         print(f"1. Create naive RAG baseline: uv run python 4_naive_rag_cv.py")
         print(f"2. Run comparison: uv run python 5_compare_systems.py")
 
     except Exception as e:
         logger.error(f"Ground truth generation failed: {e}")
-        print(f"\n❌ Error: {e}")
+        print(f"\n Error: {e}")
         raise
 
 
