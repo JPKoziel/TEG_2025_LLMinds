@@ -183,6 +183,48 @@ class DataKnowledgeGraphBuilder:
                 Person -[:HOLDS_POSITION {{start_date, end_date, is_current}}]-> JobTitle
             - If end_date is "Present" or "Now", set is_current = true and treat this job as the latest.
             - Always create both JobTitle and Company nodes if both exist in the entry.
+            
+            IMPORTANT — RFP MATCHING LOGIC:
+            When a question asks for:
+            - "best candidate"
+            - "most suitable candidate"
+            - "top developer"
+            - "who should be assigned to this RFP"
+            
+            Interpret it as:
+            
+            The best candidate is the Person who matches the HIGHEST NUMBER of required skills
+            defined by the RFP via the path:
+            
+            (RFP)-[:REQUIRES]->(Requirement)-[:REQUIRES_SKILL]->(Skill)
+            (Person)-[:HAS_SKILL]->(Skill)
+            
+            Matching is CASE-INSENSITIVE on Skill.id.
+            
+            Ranking logic:
+            - Count DISTINCT matched skills
+            - Order descending by number of matched skills
+            - Return the top candidate (LIMIT 1)
+            
+            This logic corresponds to the Cypher pattern:
+            
+            MATCH (r:RFP {{title: $rfp_title}})
+            MATCH (r)-[:REQUIRES]->(:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
+            
+            WITH r, collect(DISTINCT toLower(s.id)) AS requiredSkills
+            
+            MATCH (p:Person)-[:HAS_SKILL]->(ps:Skill)
+            WITH p, requiredSkills, collect(DISTINCT toLower(ps.id)) AS personSkills
+            
+            WITH p, requiredSkills,
+                 size(apoc.coll.intersection(requiredSkills, personSkills)) AS matchedSkills
+            
+            RETURN p.id AS candidate, matchedSkills
+            ORDER BY matchedSkills DESC, p.id ASC
+            LIMIT 1
+
+            
+            If multiple candidates are requested, return them ordered by matched skill count. If you do not find any candidates, try again.
             """
         )
 
@@ -298,6 +340,7 @@ class DataKnowledgeGraphBuilder:
 
         pdf_files = glob(os.path.join(cv_directory, "*.pdf"))
         pdf_files = pdf_files[:5]
+
         if not pdf_files:
             logger.error(f"No PDF files found in {cv_directory}")
             return 0
