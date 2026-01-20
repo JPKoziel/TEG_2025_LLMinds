@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = "http://localhost:8000/rag/graph"
+API_URL = "http://localhost:8000/rag/naive"
 
 st.set_page_config(page_title="LLMinds – GraphRAG", layout="centered")
 
