@@ -24,6 +24,19 @@ from weasyprint import HTML, CSS
 
 fake = Faker()
 
+CITIES = [
+    {"city": "Warsaw", "country": "Poland"},
+    {"city": "London", "country": "United Kingdom"},
+    {"city": "Paris", "country": "France"},
+    {"city": "New York", "country": "United States"},
+    {"city": "Mexico City", "country": "Mexico"},
+    {"city": "São Paulo", "country": "Brazil"},
+    {"city": "Cairo", "country": "Egypt"},
+    {"city": "Nairobi", "country": "Kenya"},
+    {"city": "Mumbai", "country": "India"},
+    {"city": "Tokyo", "country": "Japan"},
+]
+
 
 class GraphRAGDataGenerator:
     """Integrated generator for programmer profiles and realistic PDF CVs."""
@@ -62,11 +75,15 @@ class GraphRAGDataGenerator:
 
         profiles = []
         for i in range(num_profiles):
+            picked = random.choice(CITIES)
+            location_city = picked["city"]
+            location_country = picked["country"]
+
             profile = {
                 "id": i + 1,
                 "name": fake.name(),
                 "email": fake.email(),
-                "location": fake.city(),
+                "location": f"{location_city}, {location_country}",
                 "skills": self._generate_skills(),
                 "projects": self._generate_projects(),
                 "certifications": self._generate_certifications(),
@@ -434,6 +451,10 @@ class GraphRAGDataGenerator:
                     ], random.randint(0, 2))
                 })
 
+            picked = random.choice(CITIES)
+            location_city = picked["city"]
+            location_country = picked["country"]
+
             rfp = {
                 "id": f"RFP-{i+1:03d}",
                 "title": f"{random.choice(rfp_types)} Development",
@@ -445,7 +466,7 @@ class GraphRAGDataGenerator:
                 "budget_range": random.choice(budget_ranges),
                 "start_date": start_date.isoformat(),
                 "requirements": requirements,
-                "location": fake.city(),
+                "location": f"{location_city}, {location_country}",
                 "remote_allowed": random.choice([True, True, False])  # More likely to allow remote
             }
             rfps.append(rfp)

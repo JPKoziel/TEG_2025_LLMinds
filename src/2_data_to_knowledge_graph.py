@@ -238,6 +238,12 @@ class DataKnowledgeGraphBuilder:
             MATCH (r:RFP {{title: "{{rfp_title}}"}})-[:REQUIRES]->(req:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
             MATCH (p:Person)-[:HAS_SKILL]->(s)
             RETURN DISTINCT p.id AS personId
+            
+            LOCATION EXTRACTION RULES:
+            - The location must appear as a labeled field, e.g.:
+              "Location: City, Country"
+              "Location - City, Country"
+              "Based in: City, Country"
             """
         )
 
