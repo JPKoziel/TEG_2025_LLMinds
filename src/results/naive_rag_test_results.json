@@ -1,0 +1,224 @@
+{
+  "test_metadata": {
+    "system_type": "naive_rag",
+    "test_queries": 5,
+    "database_stats": {
+      "total_chunks": 140,
+      "sample_source_files": [
+        "cv_007_Craig_Webster.pdf",
+        "cv_016_Christopher_Hudson.pdf",
+        "cv_009_April_Nguyen.pdf",
+        "cv_005_Christopher_Perez.pdf",
+        "cv_010_Judith_Atkins.pdf",
+        "cv_006_Matthew_Ortiz.pdf",
+        "cv_012_Lindsay_Ball.pdf",
+        "cv_011_Patricia_Munoz.pdf"
+      ],
+      "embedding_model": "text-embedding-3-small",
+      "chunk_size": 1000,
+      "chunk_overlap": 200
+    }
+  },
+  "results": [
+    {
+      "query": "How many people have Python skills?",
+      "answer": "Based on the context provided, there are two people with Python skills:\n\n1. The person with the summary mentioning \"leveraging advanced skills in Python\" and listing Python as \"Advanced\" in their skills.\n2. The person who assisted in the development of web applications using React and Python, listing Python as \"Expert\" in their skills.",
+      "source_type": "naive_rag",
+      "execution_time": 4.295454502105713,
+      "num_chunks_retrieved": 5,
+      "context_info": [
+        {
+          "chunk_index": 0,
+          "source_file": "cv_006_Matthew_Ortiz.pdf",
+          "person_name": "cv_006_Matthew_Ortiz",
+          "content_preview": "- Relevant Coursework: Data Structures, Algorithms, Web Development, Machine\nLearning\nCertifications\nCertified Data Scientist \u2014 Data Science Institute, 2020 \nPython for Data Science \u2014 Coursera, 2019 \n..."
+        },
+        {
+          "chunk_index": 1,
+          "source_file": "cv_021_Rhonda_Jones.pdf",
+          "person_name": "cv_021_Rhonda_Jones",
+          "content_preview": "Developed internal tools using Go, focusing on enhancing team productivity through\nautomation.\nSkills\nJavaScript (Expert) \nAngular (Advanced) \nDjango (Expert) \nFastAPI (Advanced) \nJenkins (Advanced) \n..."
+        },
+        {
+          "chunk_index": 2,
+          "source_file": "cv_024_Sarah_Webb.pdf",
+          "person_name": "cv_024_Sarah_Webb",
+          "content_preview": "Sarah Webb\nEmail:anahall@example.org\nLocation: New Tracy \nSummary\nPassionate and results-driven software developer with over 5 years of experience in\nbuilding scalable applications and services. Adept..."
+        },
+        {
+          "chunk_index": 3,
+          "source_file": "cv_028_Catherine_Maxwell.pdf",
+          "person_name": "cv_028_Catherine_Maxwell",
+          "content_preview": "Django: Beginner \nProjects\nMobile App: Developed a cross-platform mobile application that connects\nusers with local services, resulting in 10,000+ downloads in the first month\npost-launch.\nMicroservic..."
+        },
+        {
+          "chunk_index": 4,
+          "source_file": "cv_028_Catherine_Maxwell.pdf",
+          "person_name": "cv_028_Catherine_Maxwell",
+          "content_preview": "per month with a 99.9% success rate. - Collaborated in a team to design and\nimplement a mobile application using Vue.js and Node.js, achieving an average user\nrating of 4.8 on app stores. - Utilized A..."
+        }
+      ],
+      "success": true
+    },
+    {
+      "query": "List people with AWS certifications",
+      "answer": "1. The individual with the following certifications: Certified Kubernetes Administrator, AWS Certified Solutions Architect, Docker Certified Associate.\n2. The individual with the following certifications: Certified Kubernetes Administrator (CKA), Scrum Master Certification, AWS Certified Solutions Architect.\n3. The individual with the following certifications: AWS Certified Solutions Architect, Google Cloud Professional.\n4. The individual with the following certifications: Microsoft Azure Developer, AWS Certified Solutions Architect, Google Cloud Professional.\n5. The individual with the following certification: AWS Certified Solutions Architect.",
+      "source_type": "naive_rag",
+      "execution_time": 1.6286280155181885,
+      "num_chunks_retrieved": 5,
+      "context_info": [
+        {
+          "chunk_index": 0,
+          "source_file": "cv_023_Devon_Long_III.pdf",
+          "person_name": "cv_023_Devon_Long_III",
+          "content_preview": "Certifications\nCertified Kubernetes Administrator\nAWS Certified Solutions Architect\nDocker Certified Associate\nEducation\nBachelor of Science in Computer Science\nUniversity of Kennethside - Kennethside..."
+        },
+        {
+          "chunk_index": 1,
+          "source_file": "cv_013_Gina_Solomon.pdf",
+          "person_name": "cv_013_Gina_Solomon",
+          "content_preview": "Certifications\nCertified Kubernetes Administrator (CKA)\nScrum Master Certification\nAWS Certified Solutions Architect\nEducation\nBachelor of Science in Computer Science\nUniversity of Kennethmouth\nGradua..."
+        },
+        {
+          "chunk_index": 2,
+          "source_file": "cv_026_Kayla_Brown.pdf",
+          "person_name": "cv_026_Kayla_Brown",
+          "content_preview": "Certifications\nAWS Certified Solutions Architect\nGoogle Cloud Professional\nEducation\nBachelor of Science in Computer Science\nTaraland University - Taraland\nAugust 2014 - May 2018\nGraduated with honors..."
+        },
+        {
+          "chunk_index": 3,
+          "source_file": "cv_025_Thomas_Lang.pdf",
+          "person_name": "cv_025_Thomas_Lang",
+          "content_preview": "Certifications\nMicrosoft Azure Developer\nAWS Certified Solutions Architect\nGoogle Cloud Professional\nEducation\nBachelor of Science in Computer Science\nPort Kristintown University\nGraduated: May 2018\n-..."
+        },
+        {
+          "chunk_index": 4,
+          "source_file": "cv_010_Judith_Atkins.pdf",
+          "person_name": "cv_010_Judith_Atkins",
+          "content_preview": "API Gateway\nCreated a robust API gateway that simplified interactions between clients\nand services, significantly improving overall system reliability.\nEducation\nBachelor of Science in Computer Scienc..."
+        }
+      ],
+      "success": true
+    },
+    {
+      "query": "What is the most common programming language?",
+      "answer": "Based on the provided context, JavaScript appears to be the most common programming language, as it is mentioned multiple times with varying levels of proficiency (Expert and Advanced).",
+      "source_type": "naive_rag",
+      "execution_time": 1.3268568515777588,
+      "num_chunks_retrieved": 5,
+      "context_info": [
+        {
+          "chunk_index": 0,
+          "source_file": "cv_012_Lindsay_Ball.pdf",
+          "person_name": "cv_012_Lindsay_Ball",
+          "content_preview": "minutes and increasing release frequency by 40%.\nTypeScript: Beginner\nAssisted in the development of web applications, focusing on improving type\nsafety and code quality.\nJava: Intermediate\nContribute..."
+        },
+        {
+          "chunk_index": 1,
+          "source_file": "cv_006_Matthew_Ortiz.pdf",
+          "person_name": "cv_006_Matthew_Ortiz",
+          "content_preview": "- Relevant Coursework: Data Structures, Algorithms, Web Development, Machine\nLearning\nCertifications\nCertified Data Scientist \u2014 Data Science Institute, 2020 \nPython for Data Science \u2014 Coursera, 2019 \n..."
+        },
+        {
+          "chunk_index": 2,
+          "source_file": "cv_012_Lindsay_Ball.pdf",
+          "person_name": "cv_012_Lindsay_Ball",
+          "content_preview": "Lindsay Ball\nEmail: brian53@example.org\nLocation: South Daleborough \nSummary\nDetail-oriented and passionate programmer with a strong background in software\ndevelopment and project management. Proficie..."
+        },
+        {
+          "chunk_index": 3,
+          "source_file": "cv_021_Rhonda_Jones.pdf",
+          "person_name": "cv_021_Rhonda_Jones",
+          "content_preview": "Developed internal tools using Go, focusing on enhancing team productivity through\nautomation.\nSkills\nJavaScript (Expert) \nAngular (Advanced) \nDjango (Expert) \nFastAPI (Advanced) \nJenkins (Advanced) \n..."
+        },
+        {
+          "chunk_index": 4,
+          "source_file": "cv_026_Kayla_Brown.pdf",
+          "person_name": "cv_026_Kayla_Brown",
+          "content_preview": "Software Developer\nCreative Solutions Co. - Taraland\nJune 2018 - February 2021\nDeveloped and maintained scalable web applications using JavaScript and \nGo, focusing on building responsive user interfa..."
+        }
+      ],
+      "success": true
+    },
+    {
+      "query": "Who worked at Google?",
+      "answer": "The context does not provide information about anyone working at Google.",
+      "source_type": "naive_rag",
+      "execution_time": 1.2540287971496582,
+      "num_chunks_retrieved": 5,
+      "context_info": [
+        {
+          "chunk_index": 0,
+          "source_file": "cv_004_Stephanie_Schmitt_MD.pdf",
+          "person_name": "cv_004_Stephanie_Schmitt_MD",
+          "content_preview": "user-friendly checkout experience and a significant boost in customer satisfaction.\nCertifications\nGoogle Cloud Professional - Certification obtained in 2022, demonstrating\nproficiency in managing and..."
+        },
+        {
+          "chunk_index": 1,
+          "source_file": "cv_009_April_Nguyen.pdf",
+          "person_name": "cv_009_April_Nguyen",
+          "content_preview": "Certifications\nGoogle Cloud Professional\nMicrosoft Azure Developer\nEducation\nBachelor of Science in Computer Science\nUniversity of Lake Justintown \u2014 Lake Justintown, TX\nGraduated: May 2018\nFocused on ..."
+        },
+        {
+          "chunk_index": 2,
+          "source_file": "cv_013_Gina_Solomon.pdf",
+          "person_name": "cv_013_Gina_Solomon",
+          "content_preview": "Gina Solomon\nEmail:audrey62@example.net\nLocation: Kennethmouth \nSummary\nDynamic and results-oriented programmer with over 5 years of experience in full-\nstack development and cloud architecture. Profi..."
+        },
+        {
+          "chunk_index": 3,
+          "source_file": "cv_007_Craig_Webster.pdf",
+          "person_name": "cv_007_Craig_Webster",
+          "content_preview": "Craig Webster\nEmail: vaughanjoshua@example.net\nLocation: Davidport \nSummary\nPassionate and results-driven programmer with over 5 years of experience in\nsoftware development, specializing in cutting-ed..."
+        },
+        {
+          "chunk_index": 4,
+          "source_file": "cv_028_Catherine_Maxwell.pdf",
+          "person_name": "cv_028_Catherine_Maxwell",
+          "content_preview": "Data Analytics Dashboard: Created an interactive dashboard for real-time\ndata analytics, simplifying data access for business analysts and decision-\nmakers.\nCertifications\nGoogle Cloud Professional\nCe..."
+        }
+      ],
+      "success": true
+    },
+    {
+      "query": "Find people with both React and Node.js skills",
+      "answer": "Based on the provided context, the following individuals have both React and Node.js skills:\n\n1. Software Developer at NextGen Solutions, Kennethmouth\n2. The individual with the project experience in creating a Real-time Chat System using Node.js for the backend and React for the frontend.\n3. Junior Developer at Creative Solutions, Michaelfurt",
+      "source_type": "naive_rag",
+      "execution_time": 1.9334182739257812,
+      "num_chunks_retrieved": 5,
+      "context_info": [
+        {
+          "chunk_index": 0,
+          "source_file": "cv_013_Gina_Solomon.pdf",
+          "person_name": "cv_013_Gina_Solomon",
+          "content_preview": "Software Developer\nNextGen Solutions, Kennethmouth\nJune 2018 - December 2019\nDeveloped a Real-time Chat System using React and Node.js, facilitating\nseamless communication for over 10,000 users.\nColla..."
+        },
+        {
+          "chunk_index": 1,
+          "source_file": "cv_025_Thomas_Lang.pdf",
+          "person_name": "cv_025_Thomas_Lang",
+          "content_preview": "MongoDB to manage data effectively, leading to a 15% reduction in database query\ntimes.\nSkills\nMachine Learning: Expert \nMongoDB: Expert \nReact: Expert \nFastAPI: Advanced \nPython: Intermediate \nGo: In..."
+        },
+        {
+          "chunk_index": 2,
+          "source_file": "cv_007_Craig_Webster.pdf",
+          "person_name": "cv_007_Craig_Webster",
+          "content_preview": "- Collaborated on a team to develop web applications using React, significantly\nimproving the user interface and experience. - Assisted in the migration of the\ncompany\u2019s databases to PostgreSQL, enhan..."
+        },
+        {
+          "chunk_index": 3,
+          "source_file": "cv_019_Laurie_Castillo.pdf",
+          "person_name": "cv_019_Laurie_Castillo",
+          "content_preview": "React for the frontend.\nArchitected a Real-time Chat System using Node.js and WebSocket,\nenhancing customer support efficiency by reducing response times by 40%.\nCollaborated with cross-functional tea..."
+        },
+        {
+          "chunk_index": 4,
+          "source_file": "cv_003_Amanda_Smith.pdf",
+          "person_name": "cv_003_Amanda_Smith",
+          "content_preview": "Junior Developer\nCreative Solutions, Michaelfurt\nJune 2018 - February 2020\nContributed to a Web Application project that served over 10,000 users,\nfocusing on front-end development with JavaScript and..."
+        }
+      ],
+      "success": true
+    }
+  ]
+}

@@ -1,0 +1,1416 @@
+{
+  "metadata": {
+    "comparison_date": "2026-01-17T10:34:03.810385",
+    "total_questions": 42,
+    "ground_truth_source": "GPT-5",
+    "systems_compared": [
+      "GraphRAG",
+      "Naive RAG"
+    ]
+  },
+  "results": [
+    {
+      "question_index": 1,
+      "question": "How many people have Python programming skills?",
+      "category": "counting",
+      "ground_truth": "18",
+      "graphrag": {
+        "answer": "There are 13 people who have Python programming skills.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)\nWHERE toLower(s.id) = toLower(\"Python\")\nRETURN count(p) AS pythonSkillCount",
+        "execution_time": 1.3404004573822021,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, there are two people with Python programming skills:\n\n1. The first individual has Python listed as an \"Advanced\" skill.\n2. The second individual has Python listed as an \"Expert\" skill.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5827326774597168,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 2,
+      "question": "How many people have worked at Google?",
+      "category": "counting",
+      "ground_truth": "Zero",
+      "graphrag": {
+        "answer": "There are 0 people who have worked at Google.",
+        "cypher_query": "MATCH (p:Person)-[:WORKED_AT]->(c:Company)\nWHERE toLower(c.id) = toLower(\"Google\")\nRETURN count(p) AS peopleWorkedAtGoogle",
+        "execution_time": 0.954439640045166,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The context does not provide information about anyone working at Google.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.0289435386657715,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 3,
+      "question": "What is the total number of people with AWS certifications?",
+      "category": "counting",
+      "ground_truth": "19",
+      "graphrag": {
+        "answer": "There are 0 people with AWS certifications.",
+        "cypher_query": "MATCH (p:Person)-[:EARNED]->(c:Certification)\nWHERE toLower(c.id) = toLower(\"AWS\")\nRETURN count(p) AS awsCertifiedPeople",
+        "execution_time": 1.0898725986480713,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, there are four instances of individuals having an AWS Certified Solutions Architect certification.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.1837100982666016,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 4,
+      "question": "How many people have Master's degrees?",
+      "category": "counting",
+      "ground_truth": "Zero",
+      "graphrag": {
+        "answer": "There are 0 people who have Master's degrees.",
+        "cypher_query": "MATCH (p:Person)-[:STUDIED_AT]->(u:University)\nWHERE toLower(u.id) CONTAINS toLower(\"Master\")\nRETURN count(DISTINCT p) AS mastersDegreeHolders",
+        "execution_time": 1.422994613647461,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, there is no information indicating that any of the individuals have a Master's degree. All the education details listed are for Bachelor of Science in Computer Science degrees.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5070583820343018,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 5,
+      "question": "How many people are located in San Francisco?",
+      "category": "counting",
+      "ground_truth": "Zero",
+      "graphrag": {
+        "answer": "There are 0 people located in San Francisco.",
+        "cypher_query": "MATCH (p:Person)-[:LOCATED_IN]->(l:Location)\nWHERE toLower(l.id) = toLower(\"San Francisco\")\nRETURN count(p) AS peopleInSanFrancisco",
+        "execution_time": 1.0031285285949707,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The context does not provide information about anyone being located in San Francisco.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.1873304843902588,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 6,
+      "question": "How many people have both Docker and Kubernetes skills?",
+      "category": "counting",
+      "ground_truth": "19",
+      "graphrag": {
+        "answer": "There are 3 people who have both Docker and Kubernetes skills.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s1:Skill), (p)-[:HAS_SKILL]->(s2:Skill)\nWHERE toLower(s1.id) = toLower(\"Docker\") AND toLower(s2.id) = toLower(\"Kubernetes\")\nRETURN count(p) AS dockerAndKubernetesSkilledPeople",
+        "execution_time": 1.2933118343353271,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, it appears that at least two individuals have both Docker and Kubernetes skills. One individual has Docker skills at an advanced level and Kubernetes skills at an expert level. Another individual has certifications in both Docker (Docker Certified Associate) and Kubernetes (Certified Kubernetes Administrator).",
+        "chunks_retrieved": 5,
+        "execution_time": 1.4026744365692139,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 7,
+      "question": "List all people who have both React and Node.js skills",
+      "category": "filtering",
+      "ground_truth": "Elizabeth Crawford, April Nguyen, Laurie Castillo, Thomas Lang",
+      "graphrag": {
+        "answer": "The people who have both React and Node.js skills are Catherine Maxwell, Thomas Lang, Devon Long Ill, Laurie Castillo, April Nguyen, and Elizabeth Crawford.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s1:Skill), (p)-[:HAS_SKILL]->(s2:Skill)\nWHERE toLower(s1.id) = toLower(\"React\") AND toLower(s2.id) = toLower(\"Node.js\")\nRETURN p.id AS name",
+        "execution_time": 1.3432676792144775,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": null,
+          "completeness_score": 0.75,
+          "quality_score": 0.75
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the following people have both React and Node.js skills:\n\n1. The individual who developed a Real-time Chat System using React and Node.js at NextGen Solutions.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.388538122177124,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 8,
+      "question": "Find all developers with more than 5 years of Python experience",
+      "category": "filtering",
+      "ground_truth": "Elizabeth Crawford, Christopher Hudson, Sarah Webb",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not contain any details about developers with more than 5 years of Python experience.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)\nWHERE toLower(s.id) = toLower(\"Python\")\nWITH p, count(s) AS experienceYears\nWHERE experienceYears > 5\nRETURN p.id AS developerName",
+        "execution_time": 1.3480477333068848,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The context does not provide specific information about the number of years of Python experience for any of the developers. Therefore, I cannot determine which developers have more than 5 years of Python experience based on the provided information.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5521559715270996,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 9,
+      "question": "Show me people who have AWS certifications and work with cloud technologies",
+      "category": "filtering",
+      "ground_truth": "Elizabeth Crawford, Amanda Smith, Craig Webster, Patricia Munoz, Gina Solomon, Tonya Robertson, Michelle Reeves, Sarah Webb, Kayla Brown, Devon Long III, Thomas Lang, Stephanie Ponce, Catherine Maxwell",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not contain any details about people with AWS certifications who work with cloud technologies.",
+        "cypher_query": "MATCH (p:Person)-[:EARNED]->(c:Certification), (p)-[:HAS_SKILL]->(s:Skill)\nWHERE toLower(c.id) = toLower(\"AWS\") AND toLower(s.id) CONTAINS toLower(\"cloud\")\nRETURN p.id AS name",
+        "execution_time": 1.5513176918029785,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the following individuals have AWS certifications and work with cloud technologies:\n\n1. **Individual 1:**\n   - Certifications: AWS Certified Solutions Architect, Google Cloud Professional\n   - Education: Bachelor of Science in Computer Science\n   - Relevant Experience: Completed a senior project focused on developing a data visualization tool.\n\n2. **Individual 2:**\n   - Certifications: Certified Kubernetes Administrator (CKA), Scrum Master Certification, AWS Certified Solutions Architect\n   - Education: Bachelor of Science in Computer Science\n   - Relevant Experience: Completed a capstone project on cloud-based application development.\n\n3. **Individual 3:**\n   - Certifications: Certified Kubernetes Administrator, AWS Certified Solutions Architect, Docker Certified Associate\n   - Education: Bachelor of Science in Computer Science\n   - Relevant Experience: Developed a personal portfolio website using React and contributed to open-source projects.\n\n4. **Individual 4:**\n   - Certifications: Microsoft Azure Developer, AWS Certified Solutions Architect, Google Cloud Professional\n   - Education: Bachelor of Science in Computer Science\n   - Relevant Experience: Completed a capstone project on the application of machine learning in predictive analytics.\n\nThese individuals have AWS certifications and have engaged in projects or coursework related to cloud technologies.",
+        "chunks_retrieved": 5,
+        "execution_time": 4.231499671936035,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 10,
+      "question": "Find all people who studied Computer Science and have industry experience",
+      "category": "filtering",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I can't identify any people who studied Computer Science and have industry experience.",
+        "cypher_query": "MATCH (p:Person)-[:STUDIED_AT]->(u:University)<-[:MENTIONS]-(d:Document)-[:MENTIONS]->(s:Skill)\nWHERE toLower(s.id) = toLower(\"Computer Science\")\nMATCH (p)-[:WORKED_AT]->(:Company)\nRETURN p.id AS name",
+        "execution_time": 1.6325421333312988,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The context provided does not include any specific information about industry experience for the individuals listed. It only provides details about their education, certifications, and additional interests or activities. Therefore, I cannot determine who among them has industry experience based on the given context.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.8458175659179688,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 11,
+      "question": "List people who worked at both startups and large companies",
+      "category": "filtering",
+      "ground_truth": "None",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I cannot list any people who worked at both startups and large companies.",
+        "cypher_query": "MATCH (p:Person)-[:WORKED_AT]->(c1:Company), (p)-[:WORKED_AT]->(c2:Company)\nWHERE c1.id = \"startup\" AND c2.id = \"large_company\"\nRETURN p.id AS name",
+        "execution_time": 1.3363251686096191,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The context does not provide specific information about whether any of the individuals have worked at both startups and large companies.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.1463649272918701,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 12,
+      "question": "Find all senior developers with leadership experience",
+      "category": "filtering",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Christopher Perez, Matthew Ortiz, Craig Webster, April Nguyen, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Laurie Castillo, Kayla Brown, Devon Long III, Catherine Maxwell",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not contain any details about senior developers with leadership experience.",
+        "cypher_query": "cypher\nMATCH (p:Person)-[:HAS_SKILL]->(s:Skill), (p)-[:HOLDS_POSITION]->(j:Jobtitle)\nWHERE toLower(j.id) CONTAINS toLower(\"senior developer\") AND toLower(s.id) CONTAINS toLower(\"leadership\")\nRETURN p.id AS name\n",
+        "execution_time": 2.1430246829986572,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the senior developers with leadership experience are:\n\n1. Devon Long III\n   - Senior Software Developer at Tech Innovations Inc. (March 2020 - Present)\n     - Spearheaded the development of the E-commerce Platform, leading a team of 5 developers.\n\n2. Rhonda Jones\n   - Senior Full Stack Developer at Tech Innovations Inc. (March 2021 - Present)\n     - Led the development of a web application using Angular and Django.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5053598880767822,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": null,
+          "completeness_score": 0.05555555555555555,
+          "quality_score": 0.05555555555555555
+        }
+      }
+    },
+    {
+      "question_index": 13,
+      "question": "What is the average years of experience across all candidates?",
+      "category": "aggregation",
+      "ground_truth": "5.7",
+      "graphrag": {
+        "answer": "The average years of experience across all candidates is approximately 2.13 years.",
+        "cypher_query": "MATCH (p:Person)-[:WORKED_AT]->(c:Company)\nWITH p, count(c) AS experienceYears\nRETURN avg(experienceYears) AS averageYearsOfExperience",
+        "execution_time": 1.2157456874847412,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.37368421052631573
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, we have information about two candidates:\n\n1. Gina Solomon has over 5 years of experience in full-stack development and cloud architecture.\n2. The second candidate has experience from January 2017 to the present (assuming the present is October 2023), which totals approximately 6 years and 9 months.\n\nTo calculate the average years of experience:\n\n- Gina Solomon: 5 years\n- Second candidate: 6 years and 9 months (approximately 6.75 years)\n\nAverage years of experience = (5 + 6.75) / 2 = 5.875 years\n\nThe average years of experience across the two candidates is approximately 5.88 years.",
+        "chunks_retrieved": 5,
+        "execution_time": 3.102710485458374,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.17543859649122806
+        }
+      }
+    },
+    {
+      "question_index": 14,
+      "question": "What is the most common programming language skill?",
+      "category": "aggregation",
+      "ground_truth": "Python",
+      "graphrag": {
+        "answer": "Based on the information provided, the most common skill mentioned is \"Jenkins,\" with a count of 14. However, this does not specify a programming language, as Jenkins is a tool often used for continuous integration and delivery. If you are specifically looking for programming languages, additional information would be needed to determine the most common one.",
+        "cypher_query": "MATCH (s:Skill)<-[:HAS_SKILL]-(p:Person)\nRETURN s.id AS skill, count(p) AS count\nORDER BY count DESC\nLIMIT 1",
+        "execution_time": 1.6776320934295654,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the most common programming language skill is Go, which appears in both CVs.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5183336734771729,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 15,
+      "question": "What is the average number of skills per person?",
+      "category": "aggregation",
+      "ground_truth": "10",
+      "graphrag": {
+        "answer": "The average number of skills per person is approximately 7.81.",
+        "cypher_query": "MATCH (p:Person)\nOPTIONAL MATCH (p)-[:HAS_SKILL]->(s:Skill)\nWITH p, count(s) AS skillCount\nRETURN avg(skillCount) AS averageSkillsPerPerson",
+        "execution_time": 1.1068267822265625,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.7809999999999999
+        }
+      },
+      "naive_rag": {
+        "answer": "To calculate the average number of skills per person, we need to count the number of skills listed for each individual and then divide by the number of individuals.\n\n1. First individual:\n   - Skills: Machine Learning, MongoDB, React, FastAPI, Python, Go, Node.js, C++, Jenkins, TypeScript\n   - Total skills: 10\n\n2. Second individual:\n   - Skills: JavaScript, Angular, Django, FastAPI, Jenkins, Kubernetes, Vue.js, Flask, Redis, Machine Learning, Go\n   - Total skills: 11\n\n3. Third individual (Sarah Webb):\n   - Skills: AWS, DevOps, Python, TypeScript, PostgreSQL, FastAPI, MongoDB, Node.js, Jenkins, Data Science, Machine Learning, Angular\n   - Total skills: 12\n\n4. Fourth individual:\n   - Skills: Machine Learning, Kubernetes, Jenkins, JavaScript, FastAPI, React, TypeScript, Go, Java\n   - Total skills: 9\n\nNow, calculate the average:\n(10 + 11 + 12 + 9) / 4 = 42 / 4 = 10.5\n\nThe average number of skills per person is 10.5.",
+        "chunks_retrieved": 5,
+        "execution_time": 3.318643569946289,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.09999999999999998
+        }
+      }
+    },
+    {
+      "question_index": 16,
+      "question": "Which city has the most candidates?",
+      "category": "aggregation",
+      "ground_truth": "Tech Innovations Inc. (appears in 19 candidatesâ€™ experience sections; city is not uniquely specified, but as a company, it is present in the most CVs. No single city is repeated more than 2 times as a candidate location.)",
+      "graphrag": {
+        "answer": "The city with the most candidates is Tinastad, with a total of 1 candidate.",
+        "cypher_query": "cypher\nMATCH (p:Person)-[:LOCATED_IN]->(l:Location)\nRETURN l.id AS city, count(p) AS candidateCount\nORDER BY candidateCount DESC\nLIMIT 1\n",
+        "execution_time": 1.2630906105041504,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.052631578947368474
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the cities and the number of candidates are as follows:\n\n- Steeleland: 1 candidate (Christopher Perez)\n- South Daleborough: 1 candidate (Lindsay Ball)\n- Stevenbury: 1 candidate (Michelle Martinez)\n- Kennethmouth: 1 candidate (Gina Solomon)\n\nEach city has one candidate, so there is no city with more candidates than the others.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5506060123443604,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.052631578947368474
+        }
+      }
+    },
+    {
+      "question_index": 17,
+      "question": "What percentage of people have cloud certifications?",
+      "category": "aggregation",
+      "ground_truth": "83%",
+      "graphrag": {
+        "answer": "The percentage of people who have cloud certifications is 100.0%.",
+        "cypher_query": "MATCH (p:Person)\nOPTIONAL MATCH (p)-[:HAS_SKILL]->(c:Certification)\nWHERE toLower(c.id) CONTAINS toLower(\"cloud\")\nWITH count(p) AS totalPeople, count(DISTINCT p) AS cloudCertifiedPeople\nRETURN (toFloat(cloudCertifiedPeople) / totalPeople) * 100 AS cloudCertificationPercentage",
+        "execution_time": 1.349715232849121,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.7951807228915663
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, all individuals mentioned have at least one cloud certification. There are three distinct CV excerpts, and each one lists at least one cloud certification:\n\n1. Google Cloud Professional\n2. Google Cloud Professional, Microsoft Azure Developer\n3. AWS Certified Solutions Architect, Google Cloud Professional\n\nTherefore, 100% of the individuals in the provided context have cloud certifications.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.0518877506256104,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": false,
+          "completeness_score": 0.0,
+          "quality_score": 0.012048192771084376
+        }
+      }
+    },
+    {
+      "question_index": 18,
+      "question": "What is the most frequently mentioned company?",
+      "category": "aggregation",
+      "ground_truth": "Tech Innovations Inc.",
+      "graphrag": {
+        "answer": "The most frequently mentioned company is Tech Innovations Inc., with a total of 24 mentions.",
+        "cypher_query": "cypher\nMATCH (d:Document)-[:MENTIONS]->(c:Company)\nRETURN c.id AS company, count(d) AS mentionCount\nORDER BY mentionCount DESC\nLIMIT 1\n",
+        "execution_time": 1.309401512145996,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The most frequently mentioned company in the context is Tech Innovations Inc.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.169163703918457,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 19,
+      "question": "Who are the top 3 most experienced developers?",
+      "category": "sorting",
+      "ground_truth": "Anthony Berger, Christopher Hudson, Catherine Maxwell",
+      "graphrag": {
+        "answer": "The top 3 most experienced developers, each having worked on 5 projects, are Christopher Perez, Lindsay Ball, and Matthew Ortiz.",
+        "cypher_query": "MATCH (p:Person)-[w:WORKED_ON]->(pr:Project)\nRETURN p.id AS name, count(w) AS projectCount\nORDER BY projectCount DESC\nLIMIT 3",
+        "execution_time": 1.3369359970092773,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.16666666666666666,
+          "quality_score": 0.16666666666666666
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the top 3 most experienced developers are:\n\n1. Christopher Hudson - Over 7 years of experience in software development and DevOps practices.\n2. Devon Long III - Over 5 years of experience in building robust web applications and scalable microservices.\n3. Rhonda Jones - Over 5 years of experience in building scalable web and mobile applications.\n\nNote: Tonya Robertson also has over 5 years of experience, but since the question asks for the top 3, the list is limited to the first three mentioned.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.8317649364471436,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.16666666666666666,
+          "quality_score": 0.16666666666666666
+        }
+      }
+    },
+    {
+      "question_index": 20,
+      "question": "List the 5 people with the most programming languages",
+      "category": "sorting",
+      "ground_truth": "April Nguyen, Linda Carter, Christopher Hudson, Kayla Brown, Patricia Munoz",
+      "graphrag": {
+        "answer": "The five people with the most programming languages are Patricia Munoz, Christopher Hudson, and Sarah Webb, each with 12 programming languages. They are followed by Rhonda Jones and Linda Carter, who each know 11 programming languages.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)\nWITH p, count(s) AS skillCount\nORDER BY skillCount DESC\nLIMIT 5\nRETURN p.id AS name, skillCount",
+        "execution_time": 1.4921209812164307,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": null,
+          "completeness_score": 0.5,
+          "quality_score": 0.5
+        }
+      },
+      "naive_rag": {
+        "answer": "The context does not provide the names of five people, nor does it list programming languages for five individuals. It only provides detailed information for one person, Lindsay Ball, who has skills in several programming languages and tools. Therefore, I cannot determine the five people with the most programming languages from the given context.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.107825756072998,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 21,
+      "question": "Rank all candidates by their number of certifications",
+      "category": "sorting",
+      "ground_truth": "Sarah Webb, Catherine Maxwell, Jennifer Smith, Thomas Lang, Devon Long III, April Nguyen, Michelle Reeves, Amanda Smith, Stephanie Ponce, Laurie Castillo, Gina Solomon, Tonya Robertson, Stephanie Schmitt MD, Craig Webster, Patricia Munoz, Rhonda Jones, Nancy Evans, Michelle Martinez, Anthony Berger, Elizabeth Crawford, Beth Fisher, Sharon Phillips, Linda Carter, Kayla Brown, Christopher Perez, Lindsay Ball, Matthew Ortiz, Laura Morrison, Christopher Hudson, Michelle Martinez",
+      "graphrag": {
+        "answer": "Here is the ranking of candidates based on their number of certifications:\n\n1. Beth Fisher - 3 certifications\n2. Jennifer Smith - 3 certifications\n3. Stephanie Ponce - 3 certifications\n4. Thomas Lang - 3 certifications\n5. Amanda Smith - 3 certifications\n6. Gina Solomon - 3 certifications\n7. Devon Long Ill - 3 certifications\n8. Michelle Martinez - 3 certifications\n9. April Nguyen - 2 certifications\n10. Elizabeth Crawford - 2 certifications\n\nCandidates with the same number of certifications are listed together.",
+        "cypher_query": "cypher\nMATCH (p:Person)-[:EARNED]->(c:Certification)\nRETURN p.id AS candidate, count(c) AS certificationCount\nORDER BY certificationCount DESC\n",
+        "execution_time": 2.2944421768188477,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.21052631578947367,
+          "quality_score": 0.21052631578947367
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, here is the ranking of candidates by their number of certifications:\n\n1. Candidate with the following certifications:\n   - Certified Kubernetes Administrator\n   - Docker Certified Associate\n   - Scrum Master Certification\n   (Total: 3 certifications)\n\n2. Candidate with the following certifications:\n   - Scrum Master Certification\n   - Docker Certified Associate\n   - Google Cloud Professional\n   (Total: 3 certifications)\n\n3. Candidate with the following certifications:\n   - Microsoft Azure Developer\n   - AWS Certified Solutions Architect\n   - Google Cloud Professional\n   (Total: 3 certifications)\n\n4. Candidate with the following certifications:\n   - Certified Kubernetes Administrator\n   - Scrum Master Certification\n   - AWS Certified Solutions Architect\n   (Total: 3 certifications)\n\nAll candidates have 3 certifications each, so they are tied in terms of the number of certifications.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.4420406818389893,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 22,
+      "question": "Who has the most diverse skill set?",
+      "category": "sorting",
+      "ground_truth": "April Nguyen",
+      "graphrag": {
+        "answer": "Sarah Webb has the most diverse skill set, with a total of 12 different skills.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)\nRETURN p.id AS name, count(DISTINCT s) AS skillCount\nORDER BY skillCount DESC\nLIMIT 1",
+        "execution_time": 1.4215967655181885,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the individual with the most diverse skill set appears to be the person with the following skills:\n\n- JavaScript (Expert)\n- Angular (Advanced)\n- Django (Expert)\n- FastAPI (Advanced)\n- Jenkins (Advanced)\n- Kubernetes (Advanced)\n- Vue.js (Intermediate)\n- Flask (Intermediate)\n- Redis (Intermediate)\n- Machine Learning (Advanced)\n- Go (Beginner)\n\nThis person has a wide range of skills across different programming languages, frameworks, and tools, indicating a diverse skill set.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.7291433811187744,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 23,
+      "question": "List people in order of their career progression",
+      "category": "sorting",
+      "ground_truth": "Kayla Brown, Jennifer Smith, Catherine Maxwell, Stephanie Schmitt MD, Laurie Castillo, Lindsay Ball, Anthony Berger, Matthew Ortiz, Gina Solomon, Judith Atkins, Patricia Munoz, April Nguyen, Amanda Smith, Rhonda Jones, Christopher Perez, Michelle Reeves, Elizabeth Crawford, Sharon Phillips, Craig Webster, Sarah Webb, Nancy Evans, Beth Fisher, Tonya Robertson, Michelle Martinez, Thomas Lang, Laura Morrison, Stephanie Ponce, Christopher Hudson, Devon Long III, Linda Carter",
+      "graphrag": {
+        "answer": "Here is a list of people along with a summary of their career progression:\n\n1. **Amanda Smith**\n   - Skills: Git, React, AWS, Flask, Rust, Docker, JavaScript, Jenkins\n   - Certifications: Google Cloud Professional, Microsoft Azure Developer, Scrum Master Certification\n   - Work Experience: Tech Innovations, Creative Solutions\n   - Projects: Web Application, Machine Learning Pipeline, Content Management System\n   - Education: University Of Michaelfurt\n   - Location: Michaelfurt\n\n2. **Anthony Berger**\n   - Skills: DevOps, Java, AWS, JavaScript, FastAPI, Angular, Microservices, Go, C++, Python\n   - Certifications: Scrum Master Certification, Docker Certified Associate\n   - Work Experience: Nextgen Technologies, Tech Innovations Inc., Creative Solutions Ltd.\n   - Education: Bartonfurt University\n   - Location: Bartonfurt\n\n3. **April Nguyen**\n   - Skills: Python, FastAPI, DevOps, Java, Docker, Django, React, Node.js, Flask, PostgreSQL, Jenkins\n   - Certifications: Google Cloud Professional, Microsoft Azure Developer\n   - Work Experience: Web Solutions LLC, Tech Innovations Inc.\n   - Education: University Of Lake Justintown\n   - Location: Lake Justintown\n\n4. **Beth Fisher**\n   - Skills: Python, JavaScript, MySQL, Git, Node.js, AWS, Java, Data Science, MongoDB, FastAPI\n   - Certifications: Scrum Master, Kubernetes, Docker\n   - Work Experience: Tech Innovations Inc., Creative Solutions Corp.\n   - Education: Lake Luiston University\n   - Location: Lake Luiston\n\n5. **Catherine Maxwell**\n   - Skills: Node.js, Go, Vue.js, Django, React, AWS, Python\n   - Work Experience: Bright Future Tech, Tech Innovations Inc., Creative Solutions Ltd.\n   - Education: University Of Stephanietown\n\n6. **Christopher Hudson**\n   - Skills: Machine Learning, MongoDB, PostgreSQL, DevOps, Data Science, AWS, JavaScript, Vue.js, Java, Redis, Rust, Flask\n   - Certifications: Certified Kubernetes Administrator (CKA)\n   - Work Experience: Tech Innovations Inc., Nextgen Solutions\n   - Education: University Of South Jennifer\n\n7. **Christopher Perez**\n   - Skills: Microservices, MySQL, Docker, Machine Learning, AWS, Kubernetes, Java, JavaScript\n   - Work Experience: Future Tech Solutions, Tech Innovations Inc.\n   - Projects: Content Management System, API Gateway, Machine Learning Pipeline, Data Analytics Dashboard, Payment Processing System\n   - Education: Steeleland University\n   - Location: Steeleland\n\n8. **Craig Webster**\n   - Skills: Microservices, Kubernetes, React, JavaScript, Machine Learning, Data Science, Git, MySQL, PostgreSQL\n   - Work Experience: Nextgen Solutions, Tech Innovations Inc.\n   - Projects: Mobile App, Microservices Architecture\n   - Education: University Of Davidport\n\n9. **Devon Long Ill**\n   - Skills: DevOps, React, Jenkins, Angular, Node.js\n   - Certifications: Certified Kubernetes Administrator, AWS Certified Solutions Architect, Docker Certified Associate\n   - Work Experience: Tech Innovations Inc., Nextgen Solutions\n   - Education: University Of Kennethside\n   - Location: Kennethside\n\n10. **Elizabeth Crawford**\n    - Skills: MySQL, Django, React, Kubernetes, DevOps, Python, Jenkins, Node.js, Machine Learning\n    - Certifications: Microsoft Azure Developer, Google Cloud Professional\n    - Work Experience: Tech Innovations Inc., Nextgen Solutions\n    - Projects: Content Management System, Mobile App\n    - Education: Tinastad University\n    - Location: Tinastad\n\nThis list provides an overview of each person's skills, certifications, work experience, projects, education, and location.",
+        "cypher_query": "MATCH (p:Person)-[r:WORKED_AT|HOLDS_POSITION|WORKED_ON|STUDIED_AT|LOCATED_IN|HAS_SKILL|EARNED]->(n)\nRETURN p.id AS personId, collect({relationship: type(r), node: n.id}) AS careerProgression\nORDER BY personId",
+        "execution_time": 12.61937665939331,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.034482758620689655,
+          "quality_score": 0.034482758620689655
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, here is the list of people in order of their career progression:\n\n1. **Gina Solomon**: Over 5 years of experience, currently a Senior Software Engineer at Tech Innovations Inc., Kennethmouth since January 2020.\n2. **Matthew Ortiz**: Over 5 years of experience, currently a Senior Software Engineer at Tech Innovations Inc., South Timothy, CA since March 2021.\n3. **Christopher Perez**: Currently a Software Engineer at Tech Innovations Inc., Steeleland since June 2021. \n\nNote: The context does not provide specific details about their previous roles or the exact number of years of experience for Christopher Perez, so the order is based on the current roles and the information available.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.5326976776123047,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.034482758620689655,
+          "quality_score": 0.034482758620689655
+        }
+      }
+    },
+    {
+      "question_index": 24,
+      "question": "Which candidates have the most company experience?",
+      "category": "sorting",
+      "ground_truth": "Anthony Berger, Christopher Hudson",
+      "graphrag": {
+        "answer": "The candidates with the most company experience, each having 3 years, are Linda Carter, Catherine Maxwell, Anthony Berger, and Rhonda Jones.",
+        "cypher_query": "MATCH (p:Person)-[:WORKED_AT]->(c:Company)\nRETURN p.id AS candidate, count(c) AS companyExperience\nORDER BY companyExperience DESC",
+        "execution_time": 1.0827620029449463,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": null,
+          "completeness_score": 0.5,
+          "quality_score": 0.5
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the candidates with the most company experience are:\n\n1. Linda Carter - Over 5 years of experience in full-stack development.\n2. Gina Solomon - Over 5 years of experience in full-stack development and cloud architecture.\n3. Sarah Webb - Over 5 years of experience in building scalable applications and services.\n\nAll three candidates have over 5 years of experience.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.5943782329559326,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 25,
+      "question": "Find all pairs of people who attended the same university",
+      "category": "multi_hop_reasoning",
+      "ground_truth": "Elizabeth Crawford, Amanda Smith  \nAnthony Berger, Stephanie Schmitt MD  \nChristopher Perez, Craig Webster  \nApril Nguyen, Sharon Phillips  \nJudith Atkins, Matthew Ortiz  \nPatricia Munoz, Lindsay Ball  \nGina Solomon, Devon Long III  \nTonya Robertson, Michelle Martinez  \nChristopher Hudson, Nancy Evans  \nMichelle Reeves, Laurie Castillo  \nSarah Webb, Linda Carter  \nThomas Lang, Jennifer Smith  \nKayla Brown, Catherine Maxwell",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I cannot determine any pairs of people who attended the same university.",
+        "cypher_query": "MATCH (p1:Person)-[:STUDIED_AT]->(u:University)<-[:STUDIED_AT]-(p2:Person)\nWHERE p1.id < p2.id\nRETURN p1.id AS person1, p2.id AS person2, u.id AS university",
+        "execution_time": 1.7637908458709717,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, there are no pairs of people who attended the same university. Each individual attended a different university:\n\n1. Lake Luiston University - Lake Luiston, ST\n2. University of Technology, Sarahfort\n3. Heatherchester University - Heatherchester, NY\n4. West Tammyland University, West Tammyland\n5. Newtonland University, Newtonland",
+        "chunks_retrieved": 5,
+        "execution_time": 1.7981956005096436,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 26,
+      "question": "Which people have worked at the same companies?",
+      "category": "multi_hop_reasoning",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "Anthony Berger has worked with several people at the same companies. At Nextgen Technologies, he worked with Rhonda Jones. At Tech Innovations Inc., he collaborated with Elizabeth Crawford, Linda Carter, Jennifer Smith, Catherine Maxwell, Stephanie Ponce, Kayla Brown, Stephanie Schmitt Md, Christopher Perez, and Matthew Ortiz.",
+        "cypher_query": "MATCH (p1:Person)-[:WORKED_AT]->(c:Company)<-[:WORKED_AT]-(p2:Person)\nWHERE p1.id < p2.id\nRETURN p1.id AS person1, p2.id AS person2, c.id AS companyId",
+        "execution_time": 1.8461494445800781,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": null,
+          "completeness_score": 0.3103448275862069,
+          "quality_score": 0.3103448275862069
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the following people have worked at the same companies:\n\n1. Matthew Ortiz and Gina Solomon both worked at Tech Innovations Inc.\n2. Christopher Perez and Christopher Hudson both worked at Tech Innovations Inc.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.4772250652313232,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.05172413793103448,
+          "quality_score": 0.05172413793103448
+        }
+      }
+    },
+    {
+      "question_index": 27,
+      "question": "Find developers who have complementary skills for a full-stack team",
+      "category": "multi_hop_reasoning",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I can't identify any developers with complementary skills for a full-stack team.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s1:Skill), (p)-[:HAS_SKILL]->(s2:Skill)\nWHERE toLower(s1.id) = toLower(\"Frontend\") AND toLower(s2.id) = toLower(\"Backend\")\nRETURN p.id AS developerName",
+        "execution_time": 1.3051669597625732,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, here are developers with complementary skills suitable for a full-stack team:\n\n1. **Devon Long III**\n   - **Frontend Skills**: JavaScript (Expert), Angular (Advanced), Vue.js (Intermediate)\n   - **Backend Skills**: Django (Expert), FastAPI (Advanced), Flask (Intermediate), Go (Beginner)\n   - **DevOps Skills**: Jenkins (Advanced), Kubernetes (Advanced)\n   - **Database Skills**: Redis (Intermediate)\n   - **Other Skills**: Machine Learning (Advanced)\n\n2. **Tonya Robertson**\n   - **Frontend Skills**: Not explicitly listed, but has full-stack experience\n   - **Backend Skills**: Django (Strong focus), FastAPI\n   - **DevOps Skills**: Kubernetes (Strong focus)\n   - **Other Skills**: RESTful API development\n\nThese two developers have complementary skills that cover both frontend and backend development, as well as DevOps practices, making them suitable for a full-stack team.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.8616387844085693,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.017241379310344827,
+          "quality_score": 0.017241379310344827
+        }
+      }
+    },
+    {
+      "question_index": 28,
+      "question": "Identify people who could mentor others based on shared skills",
+      "category": "multi_hop_reasoning",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "Based on the shared skills, several individuals could potentially mentor others:\n\n1. **Beth Fisher**: She shares skills in Git, AWS, and JavaScript.\n2. **Craig Webster**: He has expertise in Git, React, and JavaScript.\n3. **Judith Atkins**: She shares the skill of Git.\n4. **Linda Carter**: She also shares the skill of Git.\n5. **Michelle Martinez**: Her skills include Git, Rust, JavaScript, and Jenkins.\n6. **Nancy Evans**: She has a broad range of skills including Git, AWS, Flask, Rust, Docker, and JavaScript.\n7. **April Nguyen**: She shares skills in React, Flask, Docker, and Jenkins.\n8. **Catherine Maxwell**: Her shared skills are React and AWS.\n9. **Devon Long Ill**: He has skills in React and Jenkins.\n10. **Elizabeth Crawford**: She shares skills in React and Jenkins.\n\nThese individuals have various overlapping skills that could be valuable for mentoring others in those areas.",
+        "cypher_query": "MATCH (p1:Person)-[:HAS_SKILL]->(s:Skill)<-[:HAS_SKILL]-(p2:Person)\nWHERE p1.id <> p2.id\nRETURN p1.id AS mentor, p2.id AS mentee, collect(distinct s.id) AS sharedSkills",
+        "execution_time": 3.092630386352539,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.017241379310344827,
+          "quality_score": 0.017241379310344827
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, the following individuals could potentially mentor others based on shared skills:\n\n1. **Christopher Perez** and **Matthew Ortiz**:\n   - Both have experience in developing and implementing Machine Learning Pipelines, which could be a basis for mentorship in machine learning and data processing.\n\n2. **Anthony Berger** and **Michelle Martinez**:\n   - Both have experience in developing real-time chat systems and working with microservices architecture, which could be a basis for mentorship in these areas.\n\n3. **Lindsay Ball** and **Michelle Martinez**:\n   - Both have experience with Kubernetes and microservices architecture, which could be a basis for mentorship in container orchestration and system reliability.\n\nThese pairings are based on shared skills and experiences that could facilitate effective mentorship.",
+        "chunks_retrieved": 5,
+        "execution_time": 3.1205852031707764,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 29,
+      "question": "Find all connections between people through shared employers",
+      "category": "multi_hop_reasoning",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter are all connected through shared employers: Tech Innovations Inc., NextGen Solutions, Creative Solutions companies, Web Solutions, and Creative Solutions Ltd/LLC/Corp.",
+      "graphrag": {
+        "answer": "Elizabeth Crawford shares a connection with several individuals through their mutual employer, Tech Innovations Inc. These individuals include Linda Carter, Jennifer Smith, Catherine Maxwell, Stephanie Ponce, Kayla Brown, Anthony Berger, Stephanie Schmitt Md, Christopher Perez, Matthew Ortiz, and Craig Webster. Each of these people is connected to Elizabeth Crawford by working at the same company.",
+        "cypher_query": "MATCH (p1:Person)-[:WORKED_AT]->(c:Company)<-[:WORKED_AT]-(p2:Person)\nRETURN p1.id AS person1, p2.id AS person2, c.id AS sharedCompany",
+        "execution_time": 1.9042677879333496,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": true,
+          "numerical_accuracy": null,
+          "completeness_score": 0.32,
+          "quality_score": 0.32
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, all four individuals have worked at Tech Innovations Inc. Here are the connections through this shared employer:\n\n1. **Christopher Perez** - Software Engineer at Tech Innovations Inc. in Steeleland.\n2. **Matthew Ortiz** - Senior Software Engineer at Tech Innovations Inc. in South Timothy, CA.\n3. **Anthony Berger** - Senior Software Engineer at Tech Innovations Inc. in Bartonfurt, Germany.\n4. **Devon Long III** - Senior Software Developer at Tech Innovations Inc. in Kennethside, ST.\n\nAll four individuals are connected through their employment at Tech Innovations Inc.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.215101480484009,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.10666666666666667,
+          "quality_score": 0.10666666666666667
+        }
+      }
+    },
+    {
+      "question_index": 30,
+      "question": "Which people have similar career paths?",
+      "category": "multi_hop_reasoning",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "Several individuals have similar career paths to Anthony Berger, as they have worked at common companies. Here are the details:\n\n1. **Rhonda Jones** shares a career path with Anthony Berger at three companies: Nextgen Technologies, Tech Innovations Inc., and Creative Solutions Ltd.\n\n2. **Catherine Maxwell**, **Stephanie Ponce**, and **Matthew Ortiz** have worked with Anthony Berger at both Tech Innovations Inc. and Creative Solutions Ltd.\n\n3. **Elizabeth Crawford**, **Linda Carter**, **Jennifer Smith**, **Kayla Brown**, **Stephanie Schmitt Md**, and **Christopher Perez** have all worked with Anthony Berger at Tech Innovations Inc.\n\nThese shared experiences suggest that these individuals have had overlapping career paths with Anthony Berger, particularly at Tech Innovations Inc.",
+        "cypher_query": "MATCH (p1:Person)-[:WORKED_AT]->(c:Company)<-[:WORKED_AT]-(p2:Person)\nWHERE p1.id <> p2.id\nRETURN p1.id AS person1, p2.id AS person2, collect(DISTINCT c.id) AS commonCompanies",
+        "execution_time": 3.1003077030181885,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.05172413793103448,
+          "quality_score": 0.05172413793103448
+        }
+      },
+      "naive_rag": {
+        "answer": "Gina Solomon and Linda Carter have similar career paths. Both have over 5 years of experience in full-stack development and have worked with cloud technologies. They both have experience in leveraging machine learning techniques and have worked in roles that involve collaboration in agile environments and leading or working with cross-functional teams. Additionally, both have certifications related to cloud technologies and have a Bachelor of Science in Computer Science.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.9825701713562012,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.05172413793103448,
+          "quality_score": 0.05172413793103448
+        }
+      }
+    },
+    {
+      "question_index": 31,
+      "question": "Who graduated most recently?",
+      "category": "temporal_reasoning",
+      "ground_truth": "Patricia Munoz",
+      "graphrag": {
+        "answer": "I don't know the answer, as the information provided does not include a recent graduation year for Elizabeth Crawford.",
+        "cypher_query": "MATCH (p:Person)-[r:STUDIED_AT]->(u:University)\nRETURN p.id AS personId, max(r.year) AS mostRecentGraduationYear\nORDER BY mostRecentGraduationYear DESC\nLIMIT 1",
+        "execution_time": 1.2531962394714355,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The individual who graduated most recently is the one from Heatherchester University, who graduated in May 2020.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.1321706771850586,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 32,
+      "question": "Find people who started their careers in the same year",
+      "category": "temporal_reasoning",
+      "ground_truth": "Elizabeth Crawford, Judith Atkins, Craig Webster (2017),  \nAnthony Berger, Stephanie Schmitt MD, Patricia Munoz, Laurie Castillo, Jennifer Smith (2015),  \nAmanda Smith, Lindsay Ball (2016),  \nMatthew Ortiz, Gina Solomon, April Nguyen, Tonya Robertson, Sharon Phillips, Michelle Reeves, Michelle Martinez, Devon Long III, Rhonda Jones, Nancy Evans, Catherine Maxwell, Linda Carter (2018),  \nChristopher Perez, Stephanie Ponce (2019),  \nLaura Morrison, Beth Fisher, Kayla Brown, Sarah Webb, Thomas Lang (2014)",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I cannot identify any people who started their careers in the same year.",
+        "cypher_query": "MATCH (p1:Person)-[:WORKED_AT]->(c1:Company)<-[:AT_COMPANY]-(j1:Jobtitle), \n      (p2:Person)-[:WORKED_AT]->(c2:Company)<-[:AT_COMPANY]-(j2:Jobtitle)\nWHERE p1.id <> p2.id AND j1.id = j2.id\nRETURN p1.id AS person1, p2.id AS person2, j1.id AS jobtitle, c1.id AS company",
+        "execution_time": 1.984787940979004,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, it is not possible to determine the exact year when each individual started their career. The context only provides information about their current roles and some past experiences, but not the specific year they began their careers.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.7340879440307617,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 33,
+      "question": "Which certifications were obtained in the last 2 years?",
+      "category": "temporal_reasoning",
+      "ground_truth": "Google Cloud Professional - Stephanie Schmitt MD (2022), Scrum Master Certification - Amanda Smith (2021), Certified Kubernetes Administrator (CKA) - Craig Webster (2021), AWS Certified Solutions Architect â€“ Associate - Craig Webster (2022), Certified Kubernetes Administrator (CKA) - Patricia Munoz (2023), Docker Certified Associate - Laura Morrison (2022), Certified Kubernetes Administrator (CKA) - Michelle Martinez (2022), JavaScript Specialist Certification - Michelle Martinez (2021), Advanced Django Development - Michelle Martinez (2020), Certified Kubernetes Administrator - Nancy Evans (year not specified, assumed 2022-2023), Google Cloud Professional - Jennifer Smith (2022), Certified Kubernetes Administrator - Sarah Webb (year not specified, assumed 2022-2023), Data Science Professional Certificate - Sarah Webb (year not specified, assumed 2022-2023), Google Cloud Professional - Catherine Maxwell (year not specified, assumed 2022-2023), Certified Kubernetes Administrator - Catherine Maxwell (year not specified, assumed 2022-2023), Scrum Master Certification - Catherine Maxwell (year not specified, assumed 2022-2023)",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not contain any details about certifications obtained in the last 2 years.",
+        "cypher_query": "MATCH (c:Certification)<-[:EARNED]-(p:Person)\nWHERE c.id IN [\"Certification1\", \"Certification2\"] // Replace with actual certification IDs obtained in the last 2 years\nRETURN DISTINCT c.id AS certificationId",
+        "execution_time": 1.7112531661987305,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.01818181818181818,
+          "quality_score": 0.01818181818181818
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, the certifications obtained in the last 2 years are:\n\n1. Docker Certified Associate – Issued: June 2022\n2. Google Cloud Professional – Google, 2022",
+        "chunks_retrieved": 5,
+        "execution_time": 1.513228416442871,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.10909090909090909,
+          "quality_score": 0.10909090909090909
+        }
+      }
+    },
+    {
+      "question_index": 34,
+      "question": "Who has the longest tenure at a single company?",
+      "category": "temporal_reasoning",
+      "ground_truth": "Anthony Berger",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not specify who has the longest tenure at a single company.",
+        "cypher_query": "MATCH (p:Person)-[w:WORKED_AT]->(c:Company)\nRETURN p.id AS person, c.id AS company, max(w.duration) AS longestTenure\nORDER BY longestTenure DESC\nLIMIT 1",
+        "execution_time": 1.540113925933838,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, Gina Solomon has the longest tenure at a single company. She has been with Tech Innovations Inc. in Kennethmouth since January 2020, which is longer than the other individuals listed.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.7969887256622314,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 35,
+      "question": "Find people who changed careers after 2020",
+      "category": "temporal_reasoning",
+      "ground_truth": "Stephanie Schmitt MD, Catherine Maxwell",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not contain any records of people who changed careers after 2020.",
+        "cypher_query": "MATCH (p:Person)-[:HOLDS_POSITION]->(j1:Jobtitle)-[:AT_COMPANY]->(c1:Company)<-[:MENTIONS]-(d1:Document),\n      (p)-[:HOLDS_POSITION]->(j2:Jobtitle)-[:AT_COMPANY]->(c2:Company)<-[:MENTIONS]-(d2:Document)\nWHERE d1.source <> d2.source AND d1.type = \"employment\" AND d2.type = \"employment\" AND d1.id < d2.id AND d2.id > \"2020\"\nRETURN p.id AS personId, j1.id AS oldJobTitle, c1.id AS oldCompany, j2.id AS newJobTitle, c2.id AS newCompany",
+        "execution_time": 2.98991322517395,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, there is no explicit information indicating that any of the individuals changed careers after 2020. The context does not provide details about career changes or transitions for any of the individuals.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.4931845664978027,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 36,
+      "question": "Which candidates have the most recent work experience?",
+      "category": "temporal_reasoning",
+      "ground_truth": "All candidates (Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter) have most recent work experience ending \"Present\".",
+      "graphrag": {
+        "answer": "None of the candidates listed have any recorded most recent work experience.",
+        "cypher_query": "MATCH (p:Person)-[w:WORKED_AT]->(c:Company)\nRETURN p.id AS candidate, max(w.startDate) AS mostRecentWorkExperience\nORDER BY mostRecentWorkExperience DESC",
+        "execution_time": 1.2524843215942383,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.07462686567164178,
+          "quality_score": 0.07462686567164178
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the context provided, the candidate with the most recent work experience is the one who is currently working as a Software Developer at Tech Innovations Inc. in New Tracy, CA, from June 2019 to the present.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.4784739017486572,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.05970149253731343,
+          "quality_score": 0.05970149253731343
+        }
+      }
+    },
+    {
+      "question_index": 37,
+      "question": "Find Python developers with AWS certifications who studied at top universities",
+      "category": "complex_combinations",
+      "ground_truth": "Elizabeth Crawford, Amanda Smith, Christopher Hudson, Sarah Webb",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I cannot identify any Python developers with AWS certifications who studied at top universities.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill), \n      (p)-[:EARNED]->(c:Certification), \n      (p)-[:STUDIED_AT]->(u:University)\nWHERE toLower(s.id) = toLower(\"Python\") \n  AND toLower(c.id) = toLower(\"AWS\") \n  AND u.id IN [\"Harvard\", \"MIT\", \"Stanford\"] // Assuming these are the top universities\nRETURN p.id AS name",
+        "execution_time": 2.4605579376220703,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the following individuals meet the criteria of being Python developers with AWS certifications who studied at universities:\n\n1. The individual with the following details:\n   - Certifications: AWS Certified Solutions Architect\n   - Relevant Coursework: Data Structures, Algorithms, Web Development, Machine Learning\n   - Interests: Enjoys exploring new programming languages and frameworks, with a current focus on enhancing skills in Flask and Go.\n   - Education: Bachelor of Science in Computer Science from Taraland University, graduated with honors, GPA: 3.8/4.0\n\n2. The individual with the following details:\n   - Certifications: AWS Certified Solutions Architect\n   - Education: Bachelor of Science in Computer Science from University of Kennethmouth, graduated May 2018\n\n3. The individual with the following details:\n   - Certifications: AWS Certified Solutions Architect\n   - Education: Bachelor of Science in Computer Science from University of Kennethside, graduated May 2017\n\n4. The individual with the following details:\n   - Certifications: AWS Certified Solutions Architect\n   - Education: Bachelor of Science in Computer Science from Port Kristintown University, graduated May 2018\n\nNote: The context does not specify which universities are considered \"top universities,\" so this determination is based on the available information. Additionally, the context does not explicitly mention Python development skills, but the interest in exploring new programming languages and frameworks, including Flask, suggests a potential focus on Python.",
+        "chunks_retrieved": 5,
+        "execution_time": 3.889786720275879,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 38,
+      "question": "List all senior developers with both frontend and backend skills",
+      "category": "complex_combinations",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Michelle Reeves, Michelle Martinez, Laurie Castillo, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided is empty, so I cannot list any senior developers with both frontend and backend skills.",
+        "cypher_query": "MATCH (p:Person)-[:HOLDS_POSITION]->(j:Jobtitle), \n      (p)-[:HAS_SKILL]->(s1:Skill), \n      (p)-[:HAS_SKILL]->(s2:Skill)\nWHERE toLower(j.id) CONTAINS toLower(\"senior developer\") \n  AND toLower(s1.id) = toLower(\"frontend\") \n  AND toLower(s2.id) = toLower(\"backend\")\nRETURN p.id AS name",
+        "execution_time": 1.611330509185791,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "The context does not provide information about any individuals specifically identified as \"senior developers\" with both frontend and backend skills. The only senior-level position mentioned is Anthony Berger, who is a Senior Software Engineer, but the context does not specify his frontend and backend skills.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.1243059635162354,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.06666666666666667,
+          "quality_score": 0.06666666666666667
+        }
+      }
+    },
+    {
+      "question_index": 39,
+      "question": "Find people with machine learning skills who worked at tech companies",
+      "category": "complex_combinations",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Christopher Perez, Matthew Ortiz, Craig Webster, Gina Solomon, Sharon Phillips, Christopher Hudson, Michelle Reeves, Laurie Castillo, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Linda Carter",
+      "graphrag": {
+        "answer": "Based on the information provided, I can identify several individuals who have worked at tech companies. However, the data does not specify whether these individuals have machine learning skills. Here are the people and the tech companies they have been associated with:\n\n1. **Linda Carter** has worked at:\n   - Web Solutions Corp.\n   - Startup Hub\n   - Tech Innovations Inc.\n\n2. **Stephanie Ponce** has worked at:\n   - Creative Solutions Ltd.\n   - Tech Innovations Inc.\n\n3. **Thomas Lang** has worked at:\n   - Web Solutions Llc\n   - Tech Innovations Corp\n\n4. **Sarah Webb** has worked at:\n   - Tech Innovations Inc.\n   - Nextgen Solutions\n\n5. **Nancy Evans** has worked at:\n   - Cloud Solutions Llc\n\nIf you need information specifically about their machine learning skills, additional data would be required.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill), (p)-[:WORKED_AT]->(c:Company)\nWHERE toLower(s.id) = toLower(\"machine learning\")\nRETURN p.id AS name, c.id AS companyName",
+        "execution_time": 2.5844364166259766,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the following individuals have machine learning skills and have worked at tech companies:\n\n1. Christopher Perez\n   - Machine Learning Skill Level: Intermediate\n   - Worked at: Tech Innovations Inc. - Steeleland\n   - Experience: Led the development of a Machine Learning Pipeline and participated in the development of machine learning models.\n\n2. Matthew Ortiz\n   - Machine Learning Skill Level: Advanced\n   - Worked at: Tech Innovations Inc. — South Timothy, CA\n   - Experience: Spearheaded the implementation of a Machine Learning Pipeline.",
+        "chunks_retrieved": 5,
+        "execution_time": 2.323920965194702,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.06451612903225806,
+          "quality_score": 0.06451612903225806
+        }
+      }
+    },
+    {
+      "question_index": 40,
+      "question": "Identify candidates with both technical skills and business experience",
+      "category": "complex_combinations",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Stephanie Schmitt MD, Christopher Perez, Matthew Ortiz, Craig Webster, Laura Morrison, April Nguyen, Judith Atkins, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Michelle Martinez, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Thomas Lang, Kayla Brown, Stephanie Ponce, Catherine Maxwell, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "Based on the information provided, there are two candidates identified: Elizabeth Crawford and Linda Carter. Elizabeth Crawford appears multiple times, indicating a strong presence in the dataset, while Linda Carter is mentioned once. These candidates are likely to have both technical skills and business experience.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill), (p)-[:WORKED_AT]->(c:Company)\nRETURN p.id AS candidateId",
+        "execution_time": 1.9423835277557373,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.05172413793103448,
+          "quality_score": 0.05172413793103448
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the candidates with both technical skills and business experience are:\n\n1. Lindsay Ball\n   - Technical Skills: Kubernetes, Rust, Jenkins, TypeScript, Java\n   - Business Experience: Detail-oriented and passionate programmer with a strong background in software development and project management.\n\n2. Devon Long III\n   - Technical Skills: Experience in building robust web applications and scalable microservices, DevOps practices, cloud services, CI/CD pipelines.\n   - Business Experience: Dynamic and results-driven programmer with over 5 years of experience, adept at collaborating with cross-functional teams to deliver high-quality software solutions.\n\n3. Sarah Webb\n   - Technical Skills: AWS, DevOps, Python, TypeScript, PostgreSQL, FastAPI, MongoDB, Node.js, Jenkins, Data Science, Machine Learning, Angular.\n   - Business Experience: Passionate and results-driven software developer with over 5 years of experience in building scalable applications and services, committed to delivering high-quality solutions that enhance user experience and drive business success.",
+        "chunks_retrieved": 5,
+        "execution_time": 3.246783494949341,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.06896551724137931,
+          "quality_score": 0.06896551724137931
+        }
+      }
+    },
+    {
+      "question_index": 41,
+      "question": "Find full-stack developers with startup experience and advanced degrees",
+      "category": "complex_combinations",
+      "ground_truth": "None",
+      "graphrag": {
+        "answer": "I don't know the answer. The information provided does not contain any details about full-stack developers with startup experience and advanced degrees.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s1:Skill), \n      (p)-[:HAS_SKILL]->(s2:Skill),\n      (p)-[:WORKED_AT]->(c:Company),\n      (p)-[:STUDIED_AT]->(u:University)\nWHERE toLower(s1.id) = toLower(\"Full-Stack\") \n  AND toLower(c.id) CONTAINS toLower(\"startup\")\n  AND toLower(u.id) CONTAINS toLower(\"advanced\")\nRETURN p.id AS fullStackDevelopersWithStartupExperienceAndAdvancedDegrees",
+        "execution_time": 2.5500073432922363,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, there is no information indicating that any of the full-stack developers have startup experience or advanced degrees. The context does not mention any specific startup experience or educational qualifications beyond professional certifications.",
+        "chunks_retrieved": 5,
+        "execution_time": 1.6104211807250977,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    },
+    {
+      "question_index": 42,
+      "question": "List all candidates suitable for a DevOps role based on their skills and experience",
+      "category": "complex_combinations",
+      "ground_truth": "Elizabeth Crawford, Anthony Berger, Amanda Smith, Christopher Perez, Matthew Ortiz, Craig Webster, April Nguyen, Patricia Munoz, Lindsay Ball, Gina Solomon, Tonya Robertson, Sharon Phillips, Christopher Hudson, Michelle Reeves, Laurie Castillo, Beth Fisher, Rhonda Jones, Nancy Evans, Devon Long III, Sarah Webb, Jennifer Smith, Linda Carter",
+      "graphrag": {
+        "answer": "Based on the information provided, the candidates suitable for a DevOps role are:\n\n1. Stephanie Ponce\n2. Thomas Lang\n3. Sarah Webb\n4. Devon Long Ill\n5. Rhonda Jones\n6. Laurie Castillo\n7. Michelle Martinez\n8. Michelle Reeves\n9. Tonya Robertson\n10. Lindsay Ball\n\nThese individuals have been identified as suitable candidates for the DevOps role based on their skills and experience.",
+        "cypher_query": "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)\nWHERE toLower(s.id) IN [toLower(\"DevOps\"), toLower(\"AWS\"), toLower(\"Docker\"), toLower(\"Kubernetes\"), toLower(\"CI/CD\"), toLower(\"Jenkins\"), toLower(\"Terraform\")]\nRETURN DISTINCT p.id AS candidateId",
+        "execution_time": 2.0383780002593994,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.18604651162790697,
+          "quality_score": 0.18604651162790697
+        }
+      },
+      "naive_rag": {
+        "answer": "Based on the provided context, the following candidates appear suitable for a DevOps role:\n\n1. **First Candidate**:\n   - Skills: DevOps (Intermediate), Git (Expert), AWS (Expert), Docker (Advanced), Kubernetes (Advanced)\n   - Experience: Participated in DevOps practices, managing infrastructure as code and automating deployment processes.\n\n2. **Lindsay Ball**:\n   - Skills: Kubernetes (Intermediate), Jenkins (Expert)\n   - Experience: Managed container orchestration for microservices architecture, improving deployment efficiency by 30%. Streamlined CI/CD pipelines, reducing deployment time from hours to minutes and increasing release frequency by 40%.\n\n3. **Third Candidate**:\n   - Skills: Kubernetes (Advanced), Jenkins (Advanced), DevOps (Intermediate)\n   - Experience: Gained hands-on experience with Kubernetes for container orchestration, leading to a more efficient deployment pipeline that reduced downtime by 20%. Worked closely with the DevOps team to streamline CI/CD pipelines, increasing deployment efficiency by 50%.\n\nThese candidates have relevant skills and experience in DevOps practices, including container orchestration, CI/CD pipelines, and infrastructure management.",
+        "chunks_retrieved": 5,
+        "execution_time": 10.379298686981201,
+        "success": true,
+        "evaluation": {
+          "exact_match": false,
+          "contains_key_info": false,
+          "numerical_accuracy": null,
+          "completeness_score": 0.0,
+          "quality_score": 0.0
+        }
+      }
+    }
+  ],
+  "summary": {
+    "overall_performance": {
+      "graphrag_wins": 12,
+      "naive_rag_wins": 6,
+      "ties": 24,
+      "graphrag_win_rate": 0.2857142857142857,
+      "naive_rag_win_rate": 0.14285714285714285
+    },
+    "quality_scores": {
+      "graphrag_avg": 0.12366814123052543,
+      "naive_rag_avg": 0.028407628225242853,
+      "graphrag_median": 0.0,
+      "naive_rag_median": 0.0
+    },
+    "category_breakdown": {
+      "counting": {
+        "total": 6,
+        "graph_wins": 0,
+        "naive_wins": 0,
+        "ties": 6
+      },
+      "filtering": {
+        "total": 6,
+        "graph_wins": 1,
+        "naive_wins": 1,
+        "ties": 4
+      },
+      "aggregation": {
+        "total": 6,
+        "graph_wins": 3,
+        "naive_wins": 0,
+        "ties": 3
+      },
+      "sorting": {
+        "total": 6,
+        "graph_wins": 3,
+        "naive_wins": 0,
+        "ties": 3
+      },
+      "multi_hop_reasoning": {
+        "total": 6,
+        "graph_wins": 3,
+        "naive_wins": 1,
+        "ties": 2
+      },
+      "temporal_reasoning": {
+        "total": 6,
+        "graph_wins": 1,
+        "naive_wins": 1,
+        "ties": 4
+      },
+      "complex_combinations": {
+        "total": 6,
+        "graph_wins": 1,
+        "naive_wins": 3,
+        "ties": 2
+      }
+    }
+  }
+}
