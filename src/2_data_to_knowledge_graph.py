@@ -225,6 +225,19 @@ class DataKnowledgeGraphBuilder:
 
             
             If multiple candidates are requested, return them ordered by matched skill count. If you do not find any candidates, try again.
+            
+            ### IMPORTANT: QUERY TEMPLATE ENFORCEMENT
+            When the user asks:
+            "Which people can we assign for the <PROJECT> project?"
+            
+            Always use the exact Cypher query template below.
+            Do NOT generate any other Cypher query.
+            
+            Use this template:
+            
+            MATCH (r:RFP {{title: "{{rfp_title}}"}})-[:REQUIRES]->(req:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
+            MATCH (p:Person)-[:HAS_SKILL]->(s)
+            RETURN DISTINCT p.id AS personId
             """
         )
 
