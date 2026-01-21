@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Data to Knowledge Graph Conversion
 ==================================
@@ -6,6 +7,18 @@ Extracts data from PDFs and JSONs, converts them to a knowledge graph using
 LangChain's LLMGraphTransformer, and stores in Neo4j.
 
 This creates the static knowledge base for programmer staffing GraphRAG system.
+
+Key fixes included:
+- Resolve config output paths relative to src/ (so data/... means src/data/...)
+- Ingest RFPs from JSON into Neo4j
+- Ingest Projects from JSON into Neo4j
+- Fix LangChain prompt templating bug by escaping curly braces in additional_instructions:
+  {start_date, end_date, is_current} -> {{start_date, end_date, is_current}}
+
+Point-3 change (important):
+- Proficiency/years are modeled as PROPERTIES on Person-[:HAS_SKILL]->Skill
+  instead of global Person-[:HAS_PROFICIENCY]->Proficiency nodes/edges.
+  This prevents wrong/ambiguous "skill level" assignments.
 """
 
 from dotenv import load_dotenv
@@ -33,20 +46,45 @@ logger = logging.getLogger(__name__)
 class DataKnowledgeGraphBuilder:
     """Builds knowledge graph from PDFs and JSONs using LangChain's LLMGraphTransformer."""
 
-    def __init__(self, config_path: str = "utils/config.toml"):
-        """Initialize the data knowledge graph builder."""
+    def __init__(self, config_path: str | None = None):
+        """
+        Initialize the data knowledge graph builder.
+
+        IMPORTANT:
+        - config file default: src/utils/config.toml
+        - relative paths in config are resolved relative to src/ (not utils/)
+        """
+        if config_path is None:
+            config_path = str(Path(__file__).resolve().parent / "utils" / "config.toml")
+
+        self.config_path = config_path
         self.config = self._load_config(config_path)
+
         self.setup_neo4j()
         self.setup_llm_transformer()
 
     def _load_config(self, config_path: str) -> dict:
-        """Load configuration from TOML file."""
-        if not os.path.exists(config_path):
-            raise ValueError(f"Configuration file not found: {config_path}")
+        """Load configuration from TOML file and resolve paths relative to src/."""
+        config_file = Path(config_path).resolve()
+        if not config_file.exists():
+            raise ValueError(f"Configuration file not found: {config_file}")
 
-        with open(config_path, 'r') as f:
+        with config_file.open("r", encoding="utf-8") as f:
             config = toml.load(f)
 
+        # Resolve relative output paths against src/ directory
+        src_dir = Path(__file__).resolve().parent  # .../repo/src
+        output = config.get("output", {})
+
+        for k, v in list(output.items()):
+            if isinstance(v, str):
+                p = Path(v)
+                if not p.is_absolute():
+                    output[k] = str((src_dir / p).resolve())
+                else:
+                    output[k] = str(p.resolve())
+
+        config["output"] = output
         return config
 
     def setup_neo4j(self):
@@ -73,35 +111,29 @@ class DataKnowledgeGraphBuilder:
 
             # Step 2: Drop all constraints
             logger.info("  - Dropping all constraints...")
-            constraints_query = "SHOW CONSTRAINTS"
-            constraints = self.graph.query(constraints_query)
+            constraints = self.graph.query("SHOW CONSTRAINTS")
             for constraint in constraints:
-                constraint_name = constraint.get('name', '')
+                constraint_name = constraint.get("name", "")
                 if constraint_name:
                     try:
-                        drop_query = f"DROP CONSTRAINT {constraint_name}"
-                        self.graph.query(drop_query)
-                        logger.debug(f"    Dropped constraint: {constraint_name}")
+                        self.graph.query(f"DROP CONSTRAINT {constraint_name}")
                     except Exception as e:
                         logger.debug(f"    Could not drop constraint {constraint_name}: {e}")
 
             # Step 3: Drop all indexes
             logger.info("  - Dropping all indexes...")
-            indexes_query = "SHOW INDEXES"
-            indexes = self.graph.query(indexes_query)
+            indexes = self.graph.query("SHOW INDEXES")
             for index in indexes:
-                index_name = index.get('name', '')
-                if index_name and not index_name.startswith('__'):  # Skip system indexes
+                index_name = index.get("name", "")
+                if index_name and not index_name.startswith("__"):  # Skip system indexes
                     try:
-                        drop_query = f"DROP INDEX {index_name}"
-                        self.graph.query(drop_query)
-                        logger.debug(f"    Dropped index: {index_name}")
+                        self.graph.query(f"DROP INDEX {index_name}")
                     except Exception as e:
                         logger.debug(f"    Could not drop index {index_name}: {e}")
 
             # Step 4: Verify cleanup
-            node_count = self.graph.query("MATCH (n) RETURN count(n) as count")[0]['count']
-            rel_count = self.graph.query("MATCH ()-[r]->() RETURN count(r) as count")[0]['count']
+            node_count = self.graph.query("MATCH (n) RETURN count(n) as count")[0]["count"]
+            rel_count = self.graph.query("MATCH ()-[r]->() RETURN count(r) as count")[0]["count"]
 
             if node_count == 0 and rel_count == 0:
                 logger.info("  ✓ Database completely clean")
@@ -110,13 +142,11 @@ class DataKnowledgeGraphBuilder:
 
         except Exception as e:
             logger.error(f"Error during cleanup: {e}")
-            # Fallback to basic cleanup
             logger.info("  - Falling back to basic cleanup...")
             self.graph.query("MATCH (n) DETACH DELETE n")
 
     def setup_llm_transformer(self):
         """Setup LLM and graph transformer with CV-specific schema."""
-        # Initialize LLM - using GPT-4o-mini for cost efficiency
         self.llm = ChatOpenAI(
             model="gpt-4o-mini",
             temperature=0,
@@ -128,10 +158,14 @@ class DataKnowledgeGraphBuilder:
             "Person", "Company", "University", "Skill", "Technology",
             "Project", "Certification", "Location", "JobTitle", "Industry",
             "Seniority",
-            "RFP", "Requirement", "Proficiency"
+            "RFP", "Requirement",
+            # We keep Proficiency in allowed nodes if you want it later,
+            # but we DO NOT create Person->HAS_PROFICIENCY anymore (it causes ambiguity).
+            "Proficiency",
         ]
 
         # Define relationships with directional tuples
+        # Point-3 change: remove Person->HAS_PROFICIENCY and Requirement->REQUIRES_PROFICIENCY.
         self.allowed_relationships = [
             ("Person", "WORKED_AT", "Company"),
             ("Person", "STUDIED_AT", "University"),
@@ -151,17 +185,22 @@ class DataKnowledgeGraphBuilder:
             ("Person", "HAS_SENIORITY", "Seniority"),
             ("RFP", "REQUIRES", "Requirement"),
             ("Requirement", "REQUIRES_SKILL", "Skill"),
-            ("Requirement", "REQUIRES_PROFICIENCY", "Proficiency"),
-            ("Person", "HAS_SKILL", "Skill"),
-            ("Person", "HAS_PROFICIENCY", "Proficiency")
         ]
 
-        # Initialize transformer with strict schema
+        # IMPORTANT FIX: escape curly braces used as literal examples in prompt instructions.
+        # LangChain treats { ... } as template variables; to keep them literal use {{ ... }}.
         self.llm_transformer = LLMGraphTransformer(
             llm=self.llm,
             allowed_nodes=self.allowed_nodes,
             allowed_relationships=self.allowed_relationships,
             node_properties=["start_date", "end_date", "level", "years_experience"],
+            relationship_properties=[
+                "start_date",
+                "end_date",
+                "is_current",
+                "level",
+                "years_experience",
+            ],
             strict_mode=True,
             additional_instructions="""
             Use strict seniority extraction rules:
@@ -170,11 +209,11 @@ class DataKnowledgeGraphBuilder:
             - If newest job title contains 'Senior' or 'Lead' -> Seniority = Senior
             - If newest job title contains 'Mid' or 'Mid-level' -> Seniority = Mid
             - Otherwise assume Mid
-
+            
             Always create exactly ONE Seniority node per Person.
-            Always create Person -> HAS_SENIORITY -> Seniority
+            Always create Person -> HAS_SENIORITY -> Seniority.
             
-            
+            WORK EXPERIENCE EXTRACTION RULES:
             - If a work experience entry contains a job title (e.g., "Software Engineer", "Senior Developer", etc.), create a JobTitle node.
             - If the entry contains a company name, create a Company node and connect Person -> WORKED_AT -> Company.
             - Do not confuse Company with JobTitle.
@@ -184,66 +223,49 @@ class DataKnowledgeGraphBuilder:
             - If end_date is "Present" or "Now", set is_current = true and treat this job as the latest.
             - Always create both JobTitle and Company nodes if both exist in the entry.
             
-            IMPORTANT — RFP MATCHING LOGIC:
-            When a question asks for:
-            - "best candidate"
-            - "most suitable candidate"
-            - "top developer"
-            - "who should be assigned to this RFP"
-            
-            Interpret it as:
-            
-            The best candidate is the Person who matches the HIGHEST NUMBER of required skills
-            defined by the RFP via the path:
-            
-            (RFP)-[:REQUIRES]->(Requirement)-[:REQUIRES_SKILL]->(Skill)
-            (Person)-[:HAS_SKILL]->(Skill)
-            
-            Matching is CASE-INSENSITIVE on Skill.id.
-            
-            Ranking logic:
-            - Count DISTINCT matched skills
-            - Order descending by number of matched skills
-            - Return the top candidate (LIMIT 1)
-            
-            This logic corresponds to the Cypher pattern:
-            
-            MATCH (r:RFP {{title: $rfp_title}})
-            MATCH (r)-[:REQUIRES]->(:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
-            
-            WITH r, collect(DISTINCT toLower(s.id)) AS requiredSkills
-            
-            MATCH (p:Person)-[:HAS_SKILL]->(ps:Skill)
-            WITH p, requiredSkills, collect(DISTINCT toLower(ps.id)) AS personSkills
-            
-            WITH p, requiredSkills,
-                 size(apoc.coll.intersection(requiredSkills, personSkills)) AS matchedSkills
-            
-            RETURN p.id AS candidate, matchedSkills
-            ORDER BY matchedSkills DESC, p.id ASC
-            LIMIT 1
-
-            
-            If multiple candidates are requested, return them ordered by matched skill count. If you do not find any candidates, try again.
-            
-            ### IMPORTANT: QUERY TEMPLATE ENFORCEMENT
-            When the user asks:
-            "Which people can we assign for the <PROJECT> project?"
-            
-            Always use the exact Cypher query template below.
-            Do NOT generate any other Cypher query.
-            
-            Use this template:
-            
-            MATCH (r:RFP {{title: "{{rfp_title}}"}})-[:REQUIRES]->(req:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
-            MATCH (p:Person)-[:HAS_SKILL]->(s)
-            RETURN DISTINCT p.id AS personId
+            SKILLS + PROFICIENCY MODEL (IMPORTANT):
+            - Every skill mentioned in the CV MUST become a Skill node and a relationship from the person:
+                (Person)-[:HAS_SKILL]->(Skill)
+            - If you can infer proficiency level and/or years of experience for a specific skill,
+              DO NOT create separate Proficiency nodes.
+              Instead, attach them as PROPERTIES on the HAS_SKILL relationship:
+                (Person)-[:HAS_SKILL {{level: "Beginner|Intermediate|Advanced", years_experience: <number>}}]->(Skill)
+            - Use level only when explicitly stated or strongly implied (e.g., "expert in", "advanced", "proficient").
+            - years_experience should be numeric if stated (e.g., "3 years with Python" -> years_experience: 3). If unknown, omit it.
             
             LOCATION EXTRACTION RULES:
             - The location must appear as a labeled field, e.g.:
               "Location: City, Country"
               "Location - City, Country"
               "Based in: City, Country"
+              
+            EDUCATION EXTRACTION RULES (VERY IMPORTANT):
+            - If an education entry contains a university or school name, create:
+                (Person)-[:STUDIED_AT]->(University)
+            
+            - If the education entry contains a date range, store it on the STUDIED_AT relationship:
+                Person -[:STUDIED_AT {{start_date, end_date, is_current}}]-> University
+            
+            - Date formats may include:
+                "2015 - 2019"
+                "2015–2019"
+                "2015 to 2019"
+                "2019"
+                "2019 - Present"
+            
+            - If only one year is provided (e.g. "2019"):
+                set start_date = 2019
+                omit end_date
+            
+            - If end date is "Present", "Now", or equivalent:
+                set is_current = true
+                omit end_date
+            
+            - If dates are not explicitly stated:
+                still create STUDIED_AT
+                but do NOT guess dates (leave properties empty)
+            
+            - Dates MUST be stored as strings (e.g. "2017", "2017-09").
             """
         )
 
@@ -261,7 +283,7 @@ class DataKnowledgeGraphBuilder:
             return ""
 
     def normalize_seniority(self, title: str) -> str:
-        title_low = title.lower()
+        title_low = (title or "").lower()
         if "intern" in title_low:
             return "Intern"
         if "junior" in title_low:
@@ -279,7 +301,6 @@ class DataKnowledgeGraphBuilder:
         """
         for rel in graph_document.relationships:
             if rel.type == "HOLDS_POSITION":
-                # in your model, rel.target is the JobTitle node
                 return rel.target
         return None
 
@@ -303,8 +324,6 @@ class DataKnowledgeGraphBuilder:
 
             # Normalize seniority based on latest job title
             for gd in graph_documents:
-                print(set([n.type for n in gd.nodes]))
-
                 person_nodes = [n for n in gd.nodes if n.type == "Person"]
                 if not person_nodes:
                     continue
@@ -314,21 +333,20 @@ class DataKnowledgeGraphBuilder:
                 if not latest_job:
                     continue
 
-                seniority_value = self.normalize_seniority(latest_job.id)
+                seniority_value = self.normalize_seniority(getattr(latest_job, "id", ""))
 
-                # Check if Seniority node already exists
                 existing_seniority_nodes = [n for n in gd.nodes if n.type == "Seniority"]
-                seniority_node = None
-
                 if existing_seniority_nodes:
                     seniority_node = existing_seniority_nodes[0]
                     seniority_node.id = seniority_value
                     seniority_node.properties["id"] = seniority_value
                     seniority_node.properties["name"] = seniority_value
                 else:
-                    # Create Seniority node
-                    seniority_node = type(latest_job)(id=seniority_value, type="Seniority",
-                                                      properties={"id": seniority_value, "name": seniority_value})
+                    seniority_node = type(latest_job)(
+                        id=seniority_value,
+                        type="Seniority",
+                        properties={"id": seniority_value, "name": seniority_value},
+                    )
                     gd.nodes.append(seniority_node)
 
                 # Remove any existing HAS_SENIORITY relations from this person
@@ -337,13 +355,15 @@ class DataKnowledgeGraphBuilder:
                     if not (rel.type == "HAS_SENIORITY" and rel.source.id == person.id)
                 ]
 
-                # Create relationship
-                gd.relationships.append(type(gd.relationships[0])(
-                    source=person,
-                    target=seniority_node,
-                    type="HAS_SENIORITY",
-                    properties={}
-                ))
+                # Create HAS_SENIORITY relationship
+                if gd.relationships:
+                    rel_cls = type(gd.relationships[0])
+                    gd.relationships.append(rel_cls(
+                        source=person,
+                        target=seniority_node,
+                        type="HAS_SENIORITY",
+                        properties={}
+                    ))
 
             return graph_documents
 
@@ -351,13 +371,13 @@ class DataKnowledgeGraphBuilder:
             logger.error(f"Failed to convert {pdf_path} to graph: {e}")
             return []
 
-
-    async def process_all_cvs(self, cv_directory: str = None) -> int:
+    async def process_all_cvs(self, cv_directory: str | None = None) -> int:
         """Process all PDF CVs in the directory."""
         if cv_directory is None:
-            cv_directory = self.config['output']['programmers_dir']
+            cv_directory = self.config["output"]["programmers_dir"]
 
         pdf_files = glob(os.path.join(cv_directory, "*.pdf"))
+        # keep cost controlled
         pdf_files = pdf_files[:5]
 
         if not pdf_files:
@@ -417,9 +437,8 @@ class DataKnowledgeGraphBuilder:
         for index_query in indexes:
             try:
                 self.graph.query(index_query)
-                logger.debug(f"Created index: {index_query}")
             except Exception as e:
-                logger.debug(f"Index might already exist: {e}")
+                logger.debug(f"Index might already exist or failed: {e}")
 
     def validate_graph(self):
         """Validate the created knowledge graph."""
@@ -440,16 +459,15 @@ class DataKnowledgeGraphBuilder:
                 else:
                     logger.info(f"\n{description}:")
                     for row in result[:10]:
-                        if 'type' in row:
-                            logger.info(f"  {row['type']}: {row['count']}")
-                        else:
-                            logger.info(f"  {row}")
+                        logger.info(f"  {row.get('type')}: {row.get('count')}")
             except Exception as e:
                 logger.error(f"Failed to execute validation query '{description}': {e}")
 
         sample_queries = [
-            "MATCH (p:Person)-[:HAS_SKILL]->(s:Skill) RETURN p.id, s.id LIMIT 5",
-            "MATCH (p:Person)-[:WORKED_AT]->(c:Company) RETURN p.id, c.id LIMIT 5"
+            "MATCH (p:Person)-[r:HAS_SKILL]->(s:Skill) RETURN p.id AS person, s.id AS skill, r.level AS level, r.years_experience AS years LIMIT 10",
+            "MATCH (p:Person)-[:WORKED_AT]->(c:Company) RETURN p.id AS person, c.id AS company LIMIT 5",
+            "MATCH (p:Project)-[:REQUIRES]->(:Requirement)-[:REQUIRES_SKILL]->(s:Skill) RETURN p.id AS project, collect(s.id)[0..10] AS skills LIMIT 5",
+            "MATCH (r:RFP)-[:REQUIRES]->(:Requirement)-[:REQUIRES_SKILL]->(s:Skill) RETURN r.id AS rfp, collect(s.id)[0..10] AS skills LIMIT 5",
         ]
 
         logger.info("\nSample relationships:")
@@ -461,6 +479,9 @@ class DataKnowledgeGraphBuilder:
             except Exception as e:
                 logger.debug(f"Sample query failed: {e}")
 
+    # -----------------------
+    # RFP ingestion (JSON)
+    # -----------------------
     def load_rfps_from_json(self, json_path: str):
         """Load RFPs from JSON file."""
         import json
@@ -470,9 +491,7 @@ class DataKnowledgeGraphBuilder:
             return []
 
         with open(json_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-
-        return data
+            return json.load(f)
 
     def convert_rfps_to_graph(self, json_path: str):
         """Convert RFP JSON into Neo4j nodes and relationships."""
@@ -512,8 +531,11 @@ class DataKnowledgeGraphBuilder:
             )
 
             for req in rfp.get("requirements", []):
-                req_id = f"{rfp_id}-{req.get('skill_name')}"
                 skill_name = req.get("skill_name")
+                if not skill_name:
+                    continue
+
+                req_id = f"{rfp_id}-{skill_name}"
 
                 self.graph.query(
                     """
@@ -529,9 +551,7 @@ class DataKnowledgeGraphBuilder:
                 )
 
                 self.graph.query(
-                    """
-                    MERGE (s:Skill {id: $skill})
-                    """,
+                    "MERGE (s:Skill {id: $skill})",
                     {"skill": skill_name},
                 )
 
@@ -548,30 +568,159 @@ class DataKnowledgeGraphBuilder:
 
         logger.info("✓ RFPs loaded into Neo4j successfully")
 
+    # -----------------------
+    # Projects ingestion (JSON)
+    # -----------------------
+    def load_projects_from_json(self, json_path: str):
+        """Load Projects from JSON file."""
+        import json
+
+        if not os.path.exists(json_path):
+            logger.error(f"Projects JSON not found: {json_path}")
+            return []
+
+        with open(json_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def convert_projects_to_graph(self, json_path: str):
+        """Convert Projects JSON into Neo4j nodes and relationships."""
+        projects = self.load_projects_from_json(json_path)
+        if not projects:
+            logger.warning("No projects found.")
+            return
+
+        for project in projects:
+            project_id = project.get("id")
+            if not project_id:
+                continue
+
+            self.graph.query(
+                """
+                MERGE (p:Project {id: $id})
+                SET p.name = $name,
+                    p.client = $client,
+                    p.description = $description,
+                    p.start_date = $start_date,
+                    p.end_date = $end_date,
+                    p.estimated_duration_months = $estimated_duration_months,
+                    p.budget = $budget,
+                    p.status = $status,
+                    p.team_size = $team_size
+                """,
+                {
+                    "id": project_id,
+                    "name": project.get("name"),
+                    "client": project.get("client"),
+                    "description": project.get("description"),
+                    "start_date": project.get("start_date"),
+                    "end_date": project.get("end_date"),
+                    "estimated_duration_months": project.get("estimated_duration_months"),
+                    "budget": project.get("budget"),
+                    "status": project.get("status"),
+                    "team_size": project.get("team_size"),
+                },
+            )
+
+            client = project.get("client")
+            if client:
+                self.graph.query(
+                    """
+                    MERGE (c:Company {id: $client})
+                    WITH c
+                    MATCH (p:Project {id: $pid})
+                    MERGE (p)-[:FOR_COMPANY]->(c)
+                    """,
+                    {"pid": project_id, "client": client},
+                )
+
+            for req in project.get("requirements", []):
+                skill_name = req.get("skill_name")
+                if not skill_name:
+                    continue
+
+                req_id = f"{project_id}-{skill_name}"
+
+                self.graph.query(
+                    """
+                    MERGE (req:Requirement {id: $req_id})
+                    SET req.min_proficiency = $min_proficiency,
+                        req.is_mandatory = $is_mandatory
+                    """,
+                    {
+                        "req_id": req_id,
+                        "min_proficiency": req.get("min_proficiency"),
+                        "is_mandatory": req.get("is_mandatory"),
+                    },
+                )
+
+                self.graph.query(
+                    "MERGE (s:Skill {id: $skill})",
+                    {"skill": skill_name},
+                )
+
+                self.graph.query(
+                    """
+                    MATCH (p:Project {id: $pid})
+                    MATCH (req:Requirement {id: $req_id})
+                    MATCH (s:Skill {id: $skill})
+                    MERGE (p)-[:REQUIRES]->(req)
+                    MERGE (req)-[:REQUIRES_SKILL]->(s)
+                    """,
+                    {"pid": project_id, "req_id": req_id, "skill": skill_name},
+                )
+
+            # Optional: assignments (if you later populate assigned_programmers with Person.id)
+            for programmer_name in project.get("assigned_programmers", []):
+                if not programmer_name:
+                    continue
+                self.graph.query(
+                    """
+                    MATCH (p:Project {id: $pid})
+                    MATCH (person:Person {id: $name})
+                    MERGE (person)-[:WORKED_ON]->(p)
+                    """,
+                    {"pid": project_id, "name": programmer_name},
+                )
+
+        logger.info("✓ Projects loaded into Neo4j successfully")
+
 
 async def main():
-    """Main function to convert CVs to knowledge graph."""
-    print("Converting PDF CVs to Knowledge Graph")
+    """Main function to convert CVs + JSONs to knowledge graph."""
+    print("Converting PDF CVs + JSONs to Knowledge Graph")
     print("=" * 50)
 
     try:
         builder = DataKnowledgeGraphBuilder()
+
+        # 1) CV PDFs -> graph
         processed_count = await builder.process_all_cvs()
-
         if processed_count > 0:
-            builder.validate_graph()
             print(f"\n✓ Successfully processed {processed_count} CV(s)")
-            print("✓ Knowledge graph created in Neo4j")
-            print("\nNext steps:")
-            print("1. Run: uv run python 3_query_knowledge_graph.py")
-            print("2. Open Neo4j Browser to explore the graph")
-            print("3. Try GraphRAG queries!")
         else:
-            print("❌ No CVs were successfully processed")
-            print("Please check the PDF files in data/cvs_pdf/ directory")
+            print("\n⚠ No CVs were successfully processed (check PDF directory/config)")
 
-        rfp_json_path = builder.config['output']['rfps_dir'] + "/rfps.json"
+        # 2) RFP JSON -> graph
+        rfp_json_path = str(Path(builder.config["output"]["rfps_dir"]) / "rfps.json")
         builder.convert_rfps_to_graph(rfp_json_path)
+
+        # 3) Projects JSON -> graph
+        projects_json_path = str(Path(builder.config["output"]["projects_dir"]) / "projects.json")
+        builder.convert_projects_to_graph(projects_json_path)
+
+        # 4) Validate whole graph
+        builder.validate_graph()
+
+        # Next steps (best-effort)
+        query_a = Path("3_query_knowledge_graph.py")
+        query_b = Path("query_knowledge_graph_3.py")
+        query_file = str(query_a) if query_a.exists() else (str(query_b) if query_b.exists() else "3_query_knowledge_graph.py")
+
+        print("\n✓ Knowledge graph created in Neo4j")
+        print("\nNext steps:")
+        print(f"1. Run: uv run python {query_file}")
+        print("2. Open Neo4j Browser to explore the graph")
+        print("3. Try GraphRAG queries!")
 
     except Exception as e:
         logger.error(f"Failed to build knowledge graph: {e}")
