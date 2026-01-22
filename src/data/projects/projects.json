@@ -1,358 +1,114 @@
 [
   {
     "id": "PRJ-001",
-    "name": "Mobile App Development for SmartCity Initiative",
-    "client": "BioTech Labs",
-    "description": "Development of mobile app development with focus on scalability and performance",
-    "start_date": "2025-06-21",
-    "end_date": null,
-    "estimated_duration_months": 11,
+    "name": "Mobile App Development for MediaStream",
+    "client": "TechCorp",
+    "description": "Development of e-commerce platform with focus on scalability and performance",
+    "start_date": "2024-12-26",
+    "end_date": "2025-12-21",
+    "estimated_duration_months": 12,
     "budget": null,
-    "status": "active",
-    "team_size": 7,
+    "status": "completed",
+    "team_size": 3,
     "requirements": [
       {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Intermediate",
+        "skill_name": "Python",
+        "min_proficiency": "Beginner",
         "is_mandatory": false
       },
       {
-        "skill_name": "JavaScript",
+        "skill_name": "AWS",
+        "min_proficiency": "Advanced",
+        "is_mandatory": false
+      },
+      {
+        "skill_name": "Java",
+        "min_proficiency": "Beginner",
+        "is_mandatory": true
+      }
+    ],
+    "assigned_programmers": []
+  },
+  {
+    "id": "PRJ-002",
+    "name": "Real-time Chat System for DataSystems Inc",
+    "client": "FinTech Innovations",
+    "description": "Development of machine learning pipeline with focus on scalability and performance",
+    "start_date": "2025-06-12",
+    "end_date": null,
+    "estimated_duration_months": 16,
+    "budget": null,
+    "status": "active",
+    "team_size": 6,
+    "requirements": [
+      {
+        "skill_name": "MySQL",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Vue.js",
         "min_proficiency": "Intermediate",
         "is_mandatory": false
       }
     ],
     "assigned_programmers": [
       {
-        "programmer_name": "Amanda Smith",
-        "programmer_id": 3,
-        "assignment_start_date": "2025-06-21",
-        "assignment_end_date": "2026-04-22"
+        "programmer_name": "Debra Taylor",
+        "programmer_id": 6,
+        "assignment_start_date": "2025-06-12",
+        "assignment_end_date": "2026-09-15"
       },
       {
-        "programmer_name": "Charles Lewis",
+        "programmer_name": "Tara Ferguson",
         "programmer_id": 4,
-        "assignment_start_date": "2025-06-21",
-        "assignment_end_date": "2026-05-08"
-      },
-      {
-        "programmer_name": "Jennifer Gonzalez",
-        "programmer_id": 2,
-        "assignment_start_date": "2025-06-21",
-        "assignment_end_date": "2026-05-15"
-      },
-      {
-        "programmer_name": "Nancy Miller",
-        "programmer_id": 5,
-        "assignment_start_date": "2025-06-21",
-        "assignment_end_date": "2026-05-03"
-      },
-      {
-        "programmer_name": "Michelle Hughes",
-        "programmer_id": 1,
-        "assignment_start_date": "2025-06-21",
-        "assignment_end_date": "2026-04-29"
+        "assignment_start_date": "2025-06-12",
+        "assignment_end_date": "2026-09-17"
       }
     ]
   },
   {
-    "id": "PRJ-002",
-    "name": "Customer Portal for TechCorp",
-    "client": "HealthTech Partners",
-    "description": "Development of content management system with focus on scalability and performance",
-    "start_date": "2025-05-30",
-    "end_date": "2026-04-25",
-    "estimated_duration_months": 11,
-    "budget": 96814,
+    "id": "PRJ-003",
+    "name": "API Gateway Implementation for HealthTech Partners",
+    "client": "FinTech Innovations",
+    "description": "Development of devops automation with focus on scalability and performance",
+    "start_date": "2024-02-23",
+    "end_date": "2024-08-21",
+    "estimated_duration_months": 6,
+    "budget": 397107,
     "status": "completed",
-    "team_size": 2,
+    "team_size": 3,
     "requirements": [
       {
-        "skill_name": "TypeScript",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "FastAPI",
+        "skill_name": "MongoDB",
         "min_proficiency": "Advanced",
         "is_mandatory": false
       },
       {
         "skill_name": "Data Science",
         "min_proficiency": "Beginner",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "React",
-        "min_proficiency": "Intermediate",
         "is_mandatory": true
       }
     ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-003",
-    "name": "Machine Learning Pipeline for SmartCity Initiative",
-    "client": "TechCorp",
-    "description": "Development of real-time chat system with focus on scalability and performance",
-    "start_date": "2025-10-08",
-    "end_date": null,
-    "estimated_duration_months": 8,
-    "budget": null,
-    "status": "active",
-    "team_size": 2,
-    "requirements": [
+    "assigned_programmers": [
       {
-        "skill_name": "Kubernetes",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true
+        "programmer_name": "Matthew Ramsey",
+        "programmer_id": 5,
+        "assignment_start_date": "2024-02-23",
+        "assignment_end_date": "2024-07-29"
       },
       {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
+        "programmer_name": "James Dickerson",
+        "programmer_id": 2,
+        "assignment_start_date": "2024-02-23",
+        "assignment_end_date": "2024-07-29"
       },
       {
-        "skill_name": "AWS",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
+        "programmer_name": "Christina Beltran",
+        "programmer_id": 8,
+        "assignment_start_date": "2024-02-23",
+        "assignment_end_date": "2024-07-31"
       }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-004",
-    "name": "Mobile App Development for GreenEnergy Co",
-    "client": "FinTech Innovations",
-    "description": "Development of cloud migration with focus on scalability and performance",
-    "start_date": "2024-05-25",
-    "end_date": "2024-10-22",
-    "estimated_duration_months": 5,
-    "budget": 172226,
-    "status": "completed",
-    "team_size": 2,
-    "requirements": [
-      {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "TypeScript",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Node.js",
-        "min_proficiency": "Beginner",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "PostgreSQL",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-005",
-    "name": "Real-time Chat System for SmartCity Initiative",
-    "client": "GreenEnergy Co",
-    "description": "Development of mobile app development with focus on scalability and performance",
-    "start_date": "2025-08-01",
-    "end_date": "2026-05-28",
-    "estimated_duration_months": 10,
-    "budget": 321382,
-    "status": "completed",
-    "team_size": 4,
-    "requirements": [
-      {
-        "skill_name": "React",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "Node.js",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Java",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "MySQL",
-        "min_proficiency": "Advanced",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Python",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-006",
-    "name": "Inventory Management for LogisticsPro",
-    "client": "LogisticsPro",
-    "description": "Development of inventory management with focus on scalability and performance",
-    "start_date": "2025-07-24",
-    "end_date": "2027-01-15",
-    "estimated_duration_months": 18,
-    "budget": 225449,
-    "status": "completed",
-    "team_size": 2,
-    "requirements": [
-      {
-        "skill_name": "Docker",
-        "min_proficiency": "Advanced",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Git",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Node.js",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true
-      }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-007",
-    "name": "Machine Learning Pipeline for LogisticsPro",
-    "client": "DataSystems Inc",
-    "description": "Development of data analytics dashboard with focus on scalability and performance",
-    "start_date": "2024-12-03",
-    "end_date": null,
-    "estimated_duration_months": 18,
-    "budget": 471993,
-    "status": "active",
-    "team_size": 6,
-    "requirements": [
-      {
-        "skill_name": "DevOps",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Beginner",
-        "is_mandatory": false
-      }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-008",
-    "name": "Inventory Management for LogisticsPro",
-    "client": "HealthTech Partners",
-    "description": "Development of security audit system with focus on scalability and performance",
-    "start_date": "2025-10-06",
-    "end_date": "2027-01-29",
-    "estimated_duration_months": 16,
-    "budget": null,
-    "status": "completed",
-    "team_size": 5,
-    "requirements": [
-      {
-        "skill_name": "Docker",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "Flask",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "React",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "JavaScript",
-        "min_proficiency": "Advanced",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "MySQL",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true
-      }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-009",
-    "name": "Customer Portal for MediaStream",
-    "client": "TechCorp",
-    "description": "Development of real-time chat system with focus on scalability and performance",
-    "start_date": "2025-11-19",
-    "end_date": "2026-08-16",
-    "estimated_duration_months": 9,
-    "budget": null,
-    "status": "completed",
-    "team_size": 3,
-    "requirements": [
-      {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "DevOps",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Go",
-        "min_proficiency": "Beginner",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Redis",
-        "min_proficiency": "Advanced",
-        "is_mandatory": false
-      }
-    ],
-    "assigned_programmers": []
-  },
-  {
-    "id": "PRJ-010",
-    "name": "Data Analytics Dashboard for EduTech Solutions",
-    "client": "DataSystems Inc",
-    "description": "Development of mobile app development with focus on scalability and performance",
-    "start_date": "2025-08-07",
-    "end_date": null,
-    "estimated_duration_months": 15,
-    "budget": 83526,
-    "status": "on_hold",
-    "team_size": 4,
-    "requirements": [
-      {
-        "skill_name": "JavaScript",
-        "min_proficiency": "Beginner",
-        "is_mandatory": false
-      },
-      {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Beginner",
-        "is_mandatory": false
-      }
-    ],
-    "assigned_programmers": []
+    ]
   }
 ]

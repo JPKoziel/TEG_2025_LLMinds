@@ -71,13 +71,20 @@ class CVGraphRAGSystem:
 Instructions:
 Use only the provided relationship types and properties in the schema.
 Do not use any other relationship types or properties that are not provided.
-For skill matching, always use case-insensitive comparison using toLower() function.
+For skill matching, always use case-insensitive comparison using toLower() function on s.id.
+For seniority matching, always use case-insensitive comparison on sen.name or sen.id.
 For location, region, and timezone queries, always follow this hierarchy:
 - (Person)-[:LOCATED_IN]->(Location)
 - (Location)-[:IN_REGION]->(Region)
 - (Location)-[:IN_TIMEZONE]->(Timezone)
 Never use [:MENTIONS] for connecting Person, Location, Region, or Timezone.
 For count queries, ensure you return meaningful column names.
+
+Current Date: 2026-01-22
+Use this date for any temporal queries like "next month", "available now", etc.
+"Next month" means February 2026.
+A person is available if they have NO WORKED_ON relationship with a Project that overlaps with the requested period.
+Overlapping condition for period [Start, End]: r.assignment_start_date <= End AND (r.assignment_end_date IS NULL OR r.assignment_end_date >= Start)
 
 Schema:
 {schema}
@@ -86,42 +93,92 @@ Note: Do not include any explanations or apologies in your responses.
 Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.
 Do not include any text except the generated Cypher statement.
 
-Examples: Here are a few examples of generated Cypher statements for particular questions:
+Examples:
+# How many Python developers are available next month?
+MATCH (p:Person)
+WHERE NOT EXISTS {{
+  MATCH (p)-[r:WORKED_ON]->(prj:Project)
+  WHERE r.assignment_start_date <= "2026-02-28" AND (r.assignment_end_date IS NULL OR r.assignment_end_date >= "2026-02-01")
+}}
+AND EXISTS {{
+  MATCH (p)-[:HAS_SKILL]->(s:Skill)
+  WHERE toLower(s.id) = "python"
+}}
+RETURN count(p) AS availablePythonDevelopers
 
-# How many Python programmers do we have?
-MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)
-WHERE toLower(s.id) = toLower("Python")
-RETURN count(p) AS pythonProgrammers
-
-# Who has React skills?
-MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)
-WHERE toLower(s.id) = toLower("React")
+# Find senior developers with React AND Node.js experience
+MATCH (p:Person)-[:HAS_SENIORITY]->(sen:Seniority)
+WHERE toLower(sen.name) = "senior"
+AND EXISTS {{ MATCH (p)-[:HAS_SKILL]->(s:Skill) WHERE toLower(s.id) = "react" }}
+AND EXISTS {{ MATCH (p)-[:HAS_SKILL]->(s:Skill) WHERE toLower(s.id) CONTAINS "node" }}
 RETURN p.id AS name
 
-# Find people with both Python and Django skills
-MATCH (p:Person)-[:HAS_SKILL]->(s1:Skill), (p)-[:HAS_SKILL]->(s2:Skill)
-WHERE toLower(s1.id) = toLower("Python") AND toLower(s2.id) = toLower("Django")
-RETURN p.id AS name
+# Average years of experience for machine learning projects
+MATCH (prj:Project)
+WHERE toLower(prj.name) CONTAINS "machine learning" OR toLower(prj.description) CONTAINS "machine learning"
+MATCH (p:Person)-[:WORKED_ON]->(prj)
+MATCH (p)-[hs:HAS_SKILL]->(s:Skill)
+WHERE toLower(s.id) CONTAINS "machine learning"
+RETURN avg(toInteger(hs.years_experience)) AS avgExperience
 
-# Who has machine learning expertise?
-MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)
-WHERE toLower(s.id) CONTAINS toLower("Machine Learning")
-RETURN p.id AS name
+# Developers from same university as our top performers
+// Top performers could be defined as those with most completed projects or specific seniority
+MATCH (top:Person)-[:HAS_SENIORITY]->(sen:Seniority)
+WHERE toLower(sen.name) = "senior"
+MATCH (top)-[:STUDIED_AT]->(u:University)<-[:STUDIED_AT]-(other:Person)
+WHERE top <> other
+RETURN DISTINCT other.id AS name, u.id AS university
 
-# List developers in Pacific timezone
-MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_TIMEZONE]->(t:Timezone)
-WHERE toLower(t.id) CONTAINS "pacific"
-RETURN p.id AS name
+# Skills gaps analysis for upcoming project pipeline
+// Treat RFPs as upcoming project pipeline
+MATCH (r:RFP)-[:REQUIRES]->(req:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
+WHERE NOT EXISTS {{
+  MATCH (p:Person)-[:HAS_SKILL]->(s)
+}}
+RETURN s.id AS missingSkill, count(DISTINCT r) AS projectCount
 
-# Find people in Europe region
-MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_REGION]->(r:Region)
-WHERE toLower(r.id) = "europe"
-RETURN p.id AS name
+# Optimal team composition for FinTech RFP under budget constraints
+// If no RFP has type 'fintech', we can look for RFPs from fintech clients or just any RFP
+MATCH (r:RFP)
+WHERE toLower(r.project_type) CONTAINS "fintech" OR toLower(r.client) CONTAINS "fintech" OR toLower(r.title) CONTAINS "fintech"
+MATCH (r)-[:REQUIRES]->(req:Requirement)-[:REQUIRES_SKILL]->(s:Skill)
+MATCH (p:Person)-[:HAS_SKILL]->(s)
+// Check availability next month (February 2026)
+WHERE NOT EXISTS {{
+  MATCH (p)-[w:WORKED_ON]->(prj:Project)
+  WHERE w.assignment_start_date <= "2026-02-28" AND (w.assignment_end_date IS NULL OR w.assignment_end_date >= "2026-02-01")
+}}
+RETURN r.id AS rfp, p.id AS candidate, collect(s.id) AS matchingSkills
 
-# Who is in GMT+2?
-MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_TIMEZONE]->(t:Timezone)
-WHERE toLower(t.id) CONTAINS "gmt+2"
-RETURN p.id AS name
+# Risk assessment: single points of failure
+MATCH (s:Skill)<-[:HAS_SKILL]-(p:Person)
+WITH s, count(p) AS numPeople, collect(p.id) AS people
+WHERE numPeople = 1
+RETURN s.id AS criticalSkill, people[0] AS person
+
+# List available developers in Pacific timezone
+MATCH (p:Person)
+WHERE NOT EXISTS {{
+  MATCH (p)-[r:WORKED_ON]->(prj:Project)
+  WHERE r.assignment_start_date <= "2026-02-28" AND (r.assignment_end_date IS NULL OR r.assignment_end_date >= "2026-02-01")
+}}
+MATCH (p)-[:LOCATED_IN]->(l:Location)-[:IN_TIMEZONE]->(tz:Timezone)
+WHERE toLower(tz.id) CONTAINS "pacific"
+RETURN p.id AS availableDeveloper
+
+# Who becomes available after current project ends?
+MATCH (p:Person)-[r:WORKED_ON]->(prj:Project)
+WHERE r.assignment_end_date IS NOT NULL
+RETURN p.id AS name, r.assignment_end_date AS availableDate
+ORDER BY availableDate
+
+# Skills distribution by graduation year
+// Graduation year is the year part of the end_date property on the STUDIED_AT relationship
+MATCH (p:Person)-[sa:STUDIED_AT]->(u:University)
+MATCH (p)-[:HAS_SKILL]->(s:Skill)
+WITH left(sa.end_date, 4) AS graduationYear, s.id AS skill, p
+RETURN graduationYear, skill, count(p) AS count
+ORDER BY graduationYear
 
 The question is:
 {question}"""
@@ -139,7 +196,8 @@ Information is provided as a list of records from the graph database.
 Guidelines:
 - If the information contains count results or numbers, state the exact count clearly.
 - For count queries that return 0, say "There are 0 [items]" - this is a valid result, not missing information.
-- If the information is empty or null, then say you don't know the answer.
+- If the information is empty or null, say that no such information was found or there are no such items in the database.
+- Do not say "I don't know" if the database returns an empty result; instead, explain that there are no records matching the criteria.
 - Use the provided information to construct a helpful answer.
 - Be specific and mention actual names, numbers, or details from the information.
 
@@ -601,8 +659,31 @@ def main():
         if not system.validate_graph_content():
             return
 
-        # Show schema
-        system.show_graph_schema()
+        test_questions = [
+            "How many Python developers are available next month?",
+            "Count developers with AWS certifications",
+            "Find senior developers with React AND Node.js experience",
+            "Average years of experience for machine learning projects",
+            "Find developers who worked together successfully",
+            "Who becomes available after current project ends?",
+            "Risk assessment: single points of failure in current assignments"
+        ]
+
+        print("\nBusiness Intelligence Queries Test")
+        print("=" * 50)
+
+        for q in test_questions:
+            print(f"\nQuestion: {q}")
+            try:
+                response = system.query_graph(q)
+                print(f"Answer: {response['result']}")
+            except Exception as e:
+                print(f"Error: {e}")
+
+        # Final Submit marker - avoid interactive mode in automated run
+        import sys
+        if "--test" in sys.argv:
+            return
 
         # Menu system
         while True:

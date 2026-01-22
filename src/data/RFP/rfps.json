@@ -1,41 +1,108 @@
 [
   {
     "id": "RFP-001",
-    "title": "API Integration Platform Development",
-    "client": "Energy Systems Co",
+    "title": "Cloud Migration Project Development",
+    "client": "MedTech Industries",
     "description": "Seeking experienced development team for enterprise web application",
-    "project_type": "E-commerce Modernization",
-    "duration_months": 22,
-    "team_size": 7,
-    "budget_range": "$500K - $1M",
-    "start_date": "2026-01-20",
+    "project_type": "Enterprise Web Application",
+    "duration_months": 18,
+    "team_size": 8,
+    "budget_range": "$250K - $500K",
+    "start_date": "2026-01-22",
     "requirements": [
       {
         "skill_name": "Java",
         "min_proficiency": "Advanced",
+        "is_mandatory": false,
+        "preferred_certifications": [
+          "Certified Kubernetes Administrator",
+          "Google Cloud Professional"
+        ]
+      },
+      {
+        "skill_name": "DevOps",
+        "min_proficiency": "Expert",
         "is_mandatory": true,
         "preferred_certifications": []
       },
       {
-        "skill_name": "Angular",
-        "min_proficiency": "Intermediate",
+        "skill_name": "Python",
+        "min_proficiency": "Expert",
         "is_mandatory": true,
         "preferred_certifications": [
           "Google Cloud Professional"
         ]
       },
       {
-        "skill_name": "Python",
+        "skill_name": "Kubernetes",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true,
+        "preferred_certifications": [
+          "AWS Certified Solutions Architect"
+        ]
+      }
+    ],
+    "location": "Tokyo, Japan",
+    "remote_allowed": true
+  },
+  {
+    "id": "RFP-002",
+    "title": "FinTech Payment Gateway Implementation",
+    "client": "FinTech Innovations",
+    "description": "Seeking experienced development team for secure payment processing",
+    "project_type": "FinTech Application",
+    "duration_months": 12,
+    "team_size": 8,
+    "budget_range": "$250K - $500K",
+    "start_date": "2026-01-22",
+    "requirements": [
+      {
+        "skill_name": "Docker",
         "min_proficiency": "Expert",
         "is_mandatory": false,
+        "preferred_certifications": []
+      },
+      {
+        "skill_name": "React",
+        "min_proficiency": "Advanced",
+        "is_mandatory": false,
+        "preferred_certifications": []
+      },
+      {
+        "skill_name": "Django",
+        "min_proficiency": "Expert",
+        "is_mandatory": true,
         "preferred_certifications": [
-          "Google Cloud Professional",
-          "AWS Certified Solutions Architect"
+          "Certified Kubernetes Administrator"
         ]
       },
       {
-        "skill_name": "Microservices",
+        "skill_name": "AWS",
         "min_proficiency": "Intermediate",
+        "is_mandatory": false,
+        "preferred_certifications": [
+          "Google Cloud Professional",
+          "Certified Kubernetes Administrator"
+        ]
+      },
+      {
+        "skill_name": "Java",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": true,
+        "preferred_certifications": []
+      },
+      {
+        "skill_name": "PostgreSQL",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true,
+        "preferred_certifications": [
+          "Google Cloud Professional",
+          "Certified Kubernetes Administrator"
+        ]
+      },
+      {
+        "skill_name": "Python",
+        "min_proficiency": "Advanced",
         "is_mandatory": true,
         "preferred_certifications": [
           "Google Cloud Professional",
@@ -44,33 +111,34 @@
       },
       {
         "skill_name": "DevOps",
-        "min_proficiency": "Advanced",
-        "is_mandatory": true,
+        "min_proficiency": "Intermediate",
+        "is_mandatory": false,
         "preferred_certifications": [
           "Google Cloud Professional"
         ]
       }
     ],
-    "location": "Cairo, Egypt",
+    "location": "London, United Kingdom",
     "remote_allowed": true
   },
   {
-    "id": "RFP-002",
-    "title": "Security Enhancement Development",
-    "client": "Retail Solutions Ltd",
-    "description": "Seeking experienced development team for devops automation",
-    "project_type": "E-commerce Modernization",
-    "duration_months": 7,
-    "team_size": 12,
-    "budget_range": "$100K - $250K",
-    "start_date": "2026-01-20",
+    "id": "RFP-003",
+    "title": "Mobile App Development Development",
+    "client": "Manufacturing Plus",
+    "description": "Seeking experienced development team for e-commerce modernization",
+    "project_type": "Mobile App Development",
+    "duration_months": 24,
+    "team_size": 4,
+    "budget_range": "$250K - $500K",
+    "start_date": "2026-01-22",
     "requirements": [
       {
-        "skill_name": "Microservices",
-        "min_proficiency": "Intermediate",
+        "skill_name": "MongoDB",
+        "min_proficiency": "Advanced",
         "is_mandatory": false,
         "preferred_certifications": [
-          "Google Cloud Professional"
+          "Certified Kubernetes Administrator",
+          "AWS Certified Solutions Architect"
         ]
       },
       {
@@ -78,106 +146,20 @@
         "min_proficiency": "Intermediate",
         "is_mandatory": true,
         "preferred_certifications": [
-          "Google Cloud Professional",
-          "AWS Certified Solutions Architect"
-        ]
-      },
-      {
-        "skill_name": "Angular",
-        "min_proficiency": "Expert",
-        "is_mandatory": true,
-        "preferred_certifications": [
-          "Certified Kubernetes Administrator"
-        ]
-      },
-      {
-        "skill_name": "PostgreSQL",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true,
-        "preferred_certifications": [
-          "AWS Certified Solutions Architect",
-          "Certified Kubernetes Administrator"
-        ]
-      },
-      {
-        "skill_name": "AWS",
-        "min_proficiency": "Expert",
-        "is_mandatory": true,
-        "preferred_certifications": [
-          "Certified Kubernetes Administrator",
           "Google Cloud Professional"
         ]
       },
       {
-        "skill_name": "Python",
-        "min_proficiency": "Expert",
-        "is_mandatory": false,
-        "preferred_certifications": [
-          "Certified Kubernetes Administrator"
-        ]
-      },
-      {
-        "skill_name": "MongoDB",
+        "skill_name": "PostgreSQL",
         "min_proficiency": "Advanced",
         "is_mandatory": false,
-        "preferred_certifications": []
-      },
-      {
-        "skill_name": "TypeScript",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false,
-        "preferred_certifications": []
+        "preferred_certifications": [
+          "Google Cloud Professional"
+        ]
       },
       {
         "skill_name": "Kubernetes",
-        "min_proficiency": "Expert",
-        "is_mandatory": false,
-        "preferred_certifications": [
-          "AWS Certified Solutions Architect"
-        ]
-      }
-    ],
-    "location": "Nairobi, Kenya",
-    "remote_allowed": true
-  },
-  {
-    "id": "RFP-003",
-    "title": "E-commerce Modernization Development",
-    "client": "Education Network",
-    "description": "Seeking experienced development team for e-commerce modernization",
-    "project_type": "DevOps Automation",
-    "duration_months": 11,
-    "team_size": 11,
-    "budget_range": "$250K - $500K",
-    "start_date": "2026-01-20",
-    "requirements": [
-      {
-        "skill_name": "Docker",
         "min_proficiency": "Advanced",
-        "is_mandatory": false,
-        "preferred_certifications": [
-          "Google Cloud Professional",
-          "Certified Kubernetes Administrator"
-        ]
-      },
-      {
-        "skill_name": "AWS",
-        "min_proficiency": "Advanced",
-        "is_mandatory": true,
-        "preferred_certifications": []
-      },
-      {
-        "skill_name": "TypeScript",
-        "min_proficiency": "Advanced",
-        "is_mandatory": true,
-        "preferred_certifications": [
-          "AWS Certified Solutions Architect",
-          "Certified Kubernetes Administrator"
-        ]
-      },
-      {
-        "skill_name": "Microservices",
-        "min_proficiency": "Intermediate",
         "is_mandatory": true,
         "preferred_certifications": [
           "Google Cloud Professional",
@@ -187,32 +169,30 @@
       {
         "skill_name": "React",
         "min_proficiency": "Advanced",
-        "is_mandatory": true,
+        "is_mandatory": false,
+        "preferred_certifications": [
+          "Certified Kubernetes Administrator"
+        ]
+      },
+      {
+        "skill_name": "TypeScript",
+        "min_proficiency": "Advanced",
+        "is_mandatory": false,
         "preferred_certifications": [
           "Certified Kubernetes Administrator",
           "AWS Certified Solutions Architect"
         ]
       },
       {
-        "skill_name": "Node.js",
+        "skill_name": "AWS",
         "min_proficiency": "Expert",
-        "is_mandatory": true,
-        "preferred_certifications": [
-          "Certified Kubernetes Administrator",
-          "Google Cloud Professional"
-        ]
-      },
-      {
-        "skill_name": "Java",
-        "min_proficiency": "Intermediate",
         "is_mandatory": false,
         "preferred_certifications": [
-          "Google Cloud Professional",
           "Certified Kubernetes Administrator"
         ]
       }
     ],
-    "location": "Mexico City, Mexico",
+    "location": "Mumbai, India",
     "remote_allowed": true
   }
 ]

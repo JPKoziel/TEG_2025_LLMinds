@@ -32,7 +32,7 @@ import logging
 from pathlib import Path
 import toml
 
-from unstructured.partition.pdf import partition_pdf
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_experimental.graph_transformers import LLMGraphTransformer
 from langchain_openai import ChatOpenAI
@@ -235,7 +235,8 @@ class DataKnowledgeGraphBuilder:
               Instead, attach them as PROPERTIES on the HAS_SKILL relationship:
                 (Person)-[:HAS_SKILL {{level: "Beginner|Intermediate|Advanced", years_experience: <number>}}]->(Skill)
             - Use level only when explicitly stated or strongly implied (e.g., "expert in", "advanced", "proficient").
-            - years_experience should be numeric if stated (e.g., "3 years with Python" -> years_experience: 3). If unknown, omit it.
+            - years_experience MUST be a number (integer). If the text says ">5 years", set years_experience to 5. If it says "5+ years", set years_experience to 5. If unknown, omit it.
+            - NEVER use strings like ">5" or "5+" for years_experience.
             
             LOCATION EXTRACTION RULES (CRITICAL):
             - Create a Location node ONLY if a location is explicitly mentioned in the CV.
@@ -364,10 +365,11 @@ class DataKnowledgeGraphBuilder:
         logger.info("✓ LLM Graph Transformer initialized with CV schema")
 
     def extract_text_from_pdf(self, pdf_path: str) -> str:
-        """Extract text content from PDF using unstructured."""
+        """Extract text content from PDF using PyPDFLoader."""
         try:
-            elements = partition_pdf(filename=pdf_path)
-            full_text = "\n\n".join([str(element) for element in elements])
+            loader = PyPDFLoader(pdf_path)
+            pages = loader.load()
+            full_text = "\n\n".join([page.page_content for page in pages])
             logger.debug(f"Extracted {len(full_text)} characters from {pdf_path}")
             return full_text
         except Exception as e:
@@ -470,7 +472,7 @@ class DataKnowledgeGraphBuilder:
 
         pdf_files = glob(os.path.join(cv_directory, "*.pdf"))
         # keep cost controlled
-        pdf_files = pdf_files[:5]
+        # pdf_files = pdf_files[:5]
 
         if not pdf_files:
             logger.error(f"No PDF files found in {cv_directory}")
@@ -761,17 +763,25 @@ class DataKnowledgeGraphBuilder:
                     {"pid": project_id, "req_id": req_id, "skill": skill_name},
                 )
 
-            # Optional: assignments (if you later populate assigned_programmers with Person.id)
-            for programmer_name in project.get("assigned_programmers", []):
+            # Assignments
+            for assignment in project.get("assigned_programmers", []):
+                programmer_name = assignment.get("programmer_name")
                 if not programmer_name:
                     continue
                 self.graph.query(
                     """
                     MATCH (p:Project {id: $pid})
                     MATCH (person:Person {id: $name})
-                    MERGE (person)-[:WORKED_ON]->(p)
+                    MERGE (person)-[r:WORKED_ON]->(p)
+                    SET r.assignment_start_date = $start,
+                        r.assignment_end_date = $end
                     """,
-                    {"pid": project_id, "name": programmer_name},
+                    {
+                        "pid": project_id,
+                        "name": programmer_name,
+                        "start": assignment.get("assignment_start_date"),
+                        "end": assignment.get("assignment_end_date"),
+                    },
                 )
 
         logger.info("✓ Projects loaded into Neo4j successfully")

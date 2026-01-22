@@ -23,7 +23,7 @@ def graph_rag_endpoint(req: QuestionRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/rag/naive", response_model=RAGResponse)
-def graph_rag_endpoint(req: QuestionRequest):
+def naive_rag_endpoint(req: QuestionRequest):
     try:
         result = naive_rag_service(
             question=req.question
