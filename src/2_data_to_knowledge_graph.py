@@ -162,6 +162,7 @@ class DataKnowledgeGraphBuilder:
             # We keep Proficiency in allowed nodes if you want it later,
             # but we DO NOT create Person->HAS_PROFICIENCY anymore (it causes ambiguity).
             "Proficiency",
+            "Region", "Timezone"
         ]
 
         # Define relationships with directional tuples
@@ -185,6 +186,9 @@ class DataKnowledgeGraphBuilder:
             ("Person", "HAS_SENIORITY", "Seniority"),
             ("RFP", "REQUIRES", "Requirement"),
             ("Requirement", "REQUIRES_SKILL", "Skill"),
+
+            ("Location", "IN_REGION", "Region"),
+            ("Location", "IN_TIMEZONE", "Timezone"),
         ]
 
         # IMPORTANT FIX: escape curly braces used as literal examples in prompt instructions.
@@ -233,11 +237,39 @@ class DataKnowledgeGraphBuilder:
             - Use level only when explicitly stated or strongly implied (e.g., "expert in", "advanced", "proficient").
             - years_experience should be numeric if stated (e.g., "3 years with Python" -> years_experience: 3). If unknown, omit it.
             
-            LOCATION EXTRACTION RULES:
-            - The location must appear as a labeled field, e.g.:
-              "Location: City, Country"
-              "Location - City, Country"
-              "Based in: City, Country"
+            LOCATION EXTRACTION RULES (CRITICAL):
+            - Create a Location node ONLY if a location is explicitly mentioned in the CV.
+            - Accept BOTH of the following formats:
+                • "Location: City"
+                • "Location: City, Country"
+                • "Based in City"
+                • "Based in City, Country"
+            
+            - If ONLY a city name is provided:
+                → create Location.id = "<City>"
+                → DO NOT guess or infer country, region, or timezone, UNLESS it is a well-known city listed below.
+            
+            - If both city and country are provided:
+                → create ONE Location node
+                → Location.id MUST be ONLY the city name
+                  (e.g. "Tokyo, Japan" → Location.id = "Tokyo")
+            
+            - If you identify a well-known city, you MUST also create the corresponding Timezone and Region nodes and connect them:
+                (Location)-[:IN_REGION]->(Region)
+                (Location)-[:IN_TIMEZONE]->(Timezone)
+                
+                Examples:
+                - "San Francisco" or "Los Angeles" or "Seattle" -> Timezone: "Pacific Time (PT)", Region: "North America"
+                - "New York" or "Boston" -> Timezone: "Eastern Time (ET)", Region: "North America"
+                - "London" -> Timezone: "GMT", Region: "Europe"
+                - "Tokyo" -> Timezone: "JST", Region: "Asia"
+            
+            - If a CV mentions "Pacific Timezone" or "PT" or "PST" or "PDT" directly, ALWAYS create the Timezone node with ID "Pacific Time (PT)" and link it.
+            - NEVER invent, infer, or hallucinate locations if they are not in the text.
+            - NEVER split Location into multiple nodes.
+            - Always create:
+                (Person)-[:LOCATED_IN]->(Location)
+
               
             EDUCATION EXTRACTION RULES (VERY IMPORTANT):
             - If an education entry contains a university or school name, create:
@@ -266,6 +298,66 @@ class DataKnowledgeGraphBuilder:
                 but do NOT guess dates (leave properties empty)
             
             - Dates MUST be stored as strings (e.g. "2017", "2017-09").
+            
+            ==============================
+            LOCATION & REGION MODEL (ADD-ONLY)
+            ==============================
+            
+            Location semantics MUST follow this hierarchy:
+            
+            1. City
+            2. Region (continent or macro-region)
+            3. Timezone (IANA or GMT offset)
+            
+            NODES:
+            - (:Location)        → represents a CITY ONLY (e.g. "Tokyo", "Berlin")
+            - (:Region)          → represents a macro region (e.g. "Asia", "Europe")
+            - (:Timezone)        → represents a timezone (e.g. "GMT+9", "Asia/Tokyo")
+            
+            RELATIONSHIPS:
+            - (Person)-[:LOCATED_IN]->(Location)
+            - (Location)-[:IN_REGION]->(Region)
+            - (Location)-[:IN_TIMEZONE]->(Timezone)
+            
+            ABSOLUTE RULES:
+            - NEVER store region names (Asia, Europe, EMEA, APAC) as Location.id
+            - NEVER match "Asia", "Europe", "timezone" against Location.id
+            - City names ONLY are allowed as Location.id
+            
+            QUERY INTERPRETATION RULES:
+            
+            If the user asks about:
+            - "city" → filter by Location.id
+            - "region" (Asia, Europe, APAC, EMEA) →
+                traverse: (Person)-[:LOCATED_IN]->(Location)-[:IN_REGION]->(Region)
+            - "timezone" →
+                traverse: (Person)-[:LOCATED_IN]->(Location)-[:IN_TIMEZONE]->(Timezone)
+            
+            EXAMPLES (MANDATORY):
+            
+            ✔ Correct (region query):
+            MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_REGION]->(r:Region)
+            WHERE toLower(r.id) = "asia"
+            RETURN p.id
+            
+            ✘ Incorrect:
+            MATCH (p:Person)-[:LOCATED_IN]->(l:Location)
+            WHERE l.id CONTAINS "Asia"
+            
+            DATA EXTRACTION RULES:
+            - If CV contains only city → create Location ONLY
+            - If region/timezone is NOT explicitly known → DO NOT GUESS
+            - Region/Timezone nodes may be added later via enrichment scripts
+            
+            ANTI-HALLUCINATION:
+            - "Asia", "Europe", "timezone", "Japan" are NEVER Company nodes
+            - Location-related questions MUST use Location / Region / Timezone graph paths
+
+            When the question asks for timezone (GMT+3, Japanese timezone, etc):
+            - ALWAYS query using:
+              (Person)-[:LOCATED_IN]->(Location)-[:IN_TIMEZONE]->(Timezone)
+            - NEVER use Person-[:LOCATED_IN]->Timezone directly
+
             """
         )
 

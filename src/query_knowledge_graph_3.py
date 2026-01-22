@@ -72,6 +72,11 @@ Instructions:
 Use only the provided relationship types and properties in the schema.
 Do not use any other relationship types or properties that are not provided.
 For skill matching, always use case-insensitive comparison using toLower() function.
+For location, region, and timezone queries, always follow this hierarchy:
+- (Person)-[:LOCATED_IN]->(Location)
+- (Location)-[:IN_REGION]->(Region)
+- (Location)-[:IN_TIMEZONE]->(Timezone)
+Never use [:MENTIONS] for connecting Person, Location, Region, or Timezone.
 For count queries, ensure you return meaningful column names.
 
 Schema:
@@ -96,6 +101,26 @@ RETURN p.id AS name
 # Find people with both Python and Django skills
 MATCH (p:Person)-[:HAS_SKILL]->(s1:Skill), (p)-[:HAS_SKILL]->(s2:Skill)
 WHERE toLower(s1.id) = toLower("Python") AND toLower(s2.id) = toLower("Django")
+RETURN p.id AS name
+
+# Who has machine learning expertise?
+MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)
+WHERE toLower(s.id) CONTAINS toLower("Machine Learning")
+RETURN p.id AS name
+
+# List developers in Pacific timezone
+MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_TIMEZONE]->(t:Timezone)
+WHERE toLower(t.id) CONTAINS "pacific"
+RETURN p.id AS name
+
+# Find people in Europe region
+MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_REGION]->(r:Region)
+WHERE toLower(r.id) = "europe"
+RETURN p.id AS name
+
+# Who is in GMT+2?
+MATCH (p:Person)-[:LOCATED_IN]->(l:Location)-[:IN_TIMEZONE]->(t:Timezone)
+WHERE toLower(t.id) CONTAINS "gmt+2"
 RETURN p.id AS name
 
 The question is:
