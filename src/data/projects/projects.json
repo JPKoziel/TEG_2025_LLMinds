@@ -1,114 +1,465 @@
 [
   {
     "id": "PRJ-001",
-    "name": "Mobile App Development for MediaStream",
-    "client": "TechCorp",
+    "name": "API Gateway Implementation for LogisticsPro",
+    "client": "RetailMax",
+    "description": "Development of mobile app development with focus on scalability and performance",
+    "start_date": "2025-12-24",
+    "end_date": null,
+    "estimated_duration_months": 3,
+    "budget": 214343,
+    "status": "active",
+    "team_size": 5,
+    "requirements": [
+      {
+        "skill_name": "PostgreSQL",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "MySQL",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      }
+    ],
+    "assigned_programmers": [
+      {
+        "programmer_name": "Alicia Jacobson",
+        "programmer_id": 6,
+        "assignment_start_date": "2025-12-24",
+        "assignment_end_date": "2026-03-08"
+      },
+      {
+        "programmer_name": "Daniel Davis",
+        "programmer_id": 10,
+        "assignment_start_date": "2025-12-24",
+        "assignment_end_date": "2026-03-03"
+      },
+      {
+        "programmer_name": "Katrina Farmer",
+        "programmer_id": 5,
+        "assignment_start_date": "2025-12-24",
+        "assignment_end_date": "2026-03-01"
+      }
+    ]
+  },
+  {
+    "id": "PRJ-002",
+    "name": "Microservices Architecture for DataSystems Inc",
+    "client": "DataSystems Inc",
     "description": "Development of e-commerce platform with focus on scalability and performance",
-    "start_date": "2024-12-26",
-    "end_date": "2025-12-21",
-    "estimated_duration_months": 12,
+    "start_date": "2024-10-14",
+    "end_date": "2025-05-12",
+    "estimated_duration_months": 7,
     "budget": null,
     "status": "completed",
-    "team_size": 3,
+    "team_size": 8,
     "requirements": [
+      {
+        "skill_name": "Node.js",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": false
+      },
+      {
+        "skill_name": "AWS",
+        "min_proficiency": "Beginner",
+        "is_mandatory": false
+      }
+    ],
+    "assigned_programmers": [
+      {
+        "programmer_name": "Mark West",
+        "programmer_id": 16,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-04-28"
+      },
+      {
+        "programmer_name": "Gabriel Ford",
+        "programmer_id": 1,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-05-09"
+      },
+      {
+        "programmer_name": "Joseph Moses",
+        "programmer_id": 26,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-04-24"
+      },
+      {
+        "programmer_name": "Daniel Davis",
+        "programmer_id": 10,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-05-10"
+      },
+      {
+        "programmer_name": "Felicia Singh",
+        "programmer_id": 23,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-05-01"
+      },
+      {
+        "programmer_name": "Kayla Ford",
+        "programmer_id": 14,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-05-03"
+      },
+      {
+        "programmer_name": "Julie Davenport",
+        "programmer_id": 2,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-04-23"
+      },
+      {
+        "programmer_name": "Andrew Golden",
+        "programmer_id": 4,
+        "assignment_start_date": "2024-10-14",
+        "assignment_end_date": "2025-05-07"
+      }
+    ]
+  },
+  {
+    "id": "PRJ-003",
+    "name": "Inventory Management for GreenEnergy Co",
+    "client": "CloudNative Solutions",
+    "description": "Development of payment processing system with focus on scalability and performance",
+    "start_date": "2024-07-27",
+    "end_date": "2024-12-24",
+    "estimated_duration_months": 5,
+    "budget": 436368,
+    "status": "completed",
+    "team_size": 6,
+    "requirements": [
+      {
+        "skill_name": "MongoDB",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Git",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      },
       {
         "skill_name": "Python",
         "min_proficiency": "Beginner",
         "is_mandatory": false
       },
       {
-        "skill_name": "AWS",
-        "min_proficiency": "Advanced",
+        "skill_name": "MySQL",
+        "min_proficiency": "Beginner",
+        "is_mandatory": false
+      }
+    ],
+    "assigned_programmers": [
+      {
+        "programmer_name": "Katrina Farmer",
+        "programmer_id": 5,
+        "assignment_start_date": "2024-07-27",
+        "assignment_end_date": "2024-12-18"
+      },
+      {
+        "programmer_name": "Angela White",
+        "programmer_id": 27,
+        "assignment_start_date": "2024-07-27",
+        "assignment_end_date": "2024-11-29"
+      }
+    ]
+  },
+  {
+    "id": "PRJ-004",
+    "name": "Payment Processing System for GreenEnergy Co",
+    "client": "RetailMax",
+    "description": "Development of cloud migration with focus on scalability and performance",
+    "start_date": "2025-01-19",
+    "end_date": null,
+    "estimated_duration_months": 13,
+    "budget": null,
+    "status": "active",
+    "team_size": 8,
+    "requirements": [
+      {
+        "skill_name": "Python",
+        "min_proficiency": "Intermediate",
         "is_mandatory": false
       },
       {
         "skill_name": "Java",
         "min_proficiency": "Beginner",
         "is_mandatory": true
+      },
+      {
+        "skill_name": "React",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "TypeScript",
+        "min_proficiency": "Beginner",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Kubernetes",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": false
       }
     ],
     "assigned_programmers": []
   },
   {
-    "id": "PRJ-002",
-    "name": "Real-time Chat System for DataSystems Inc",
-    "client": "FinTech Innovations",
-    "description": "Development of machine learning pipeline with focus on scalability and performance",
-    "start_date": "2025-06-12",
-    "end_date": null,
-    "estimated_duration_months": 16,
-    "budget": null,
-    "status": "active",
-    "team_size": 6,
-    "requirements": [
-      {
-        "skill_name": "MySQL",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": true
-      },
-      {
-        "skill_name": "Vue.js",
-        "min_proficiency": "Intermediate",
-        "is_mandatory": false
-      }
-    ],
-    "assigned_programmers": [
-      {
-        "programmer_name": "Debra Taylor",
-        "programmer_id": 6,
-        "assignment_start_date": "2025-06-12",
-        "assignment_end_date": "2026-09-15"
-      },
-      {
-        "programmer_name": "Tara Ferguson",
-        "programmer_id": 4,
-        "assignment_start_date": "2025-06-12",
-        "assignment_end_date": "2026-09-17"
-      }
-    ]
-  },
-  {
-    "id": "PRJ-003",
-    "name": "API Gateway Implementation for HealthTech Partners",
-    "client": "FinTech Innovations",
+    "id": "PRJ-005",
+    "name": "Real-time Chat System for RetailMax",
+    "client": "GreenEnergy Co",
     "description": "Development of devops automation with focus on scalability and performance",
-    "start_date": "2024-02-23",
-    "end_date": "2024-08-21",
-    "estimated_duration_months": 6,
-    "budget": 397107,
+    "start_date": "2025-06-11",
+    "end_date": "2026-12-03",
+    "estimated_duration_months": 18,
+    "budget": null,
     "status": "completed",
     "team_size": 3,
     "requirements": [
       {
-        "skill_name": "MongoDB",
+        "skill_name": "AWS",
         "min_proficiency": "Advanced",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "React",
+        "min_proficiency": "Intermediate",
         "is_mandatory": false
       },
       {
-        "skill_name": "Data Science",
+        "skill_name": "PostgreSQL",
         "min_proficiency": "Beginner",
-        "is_mandatory": true
+        "is_mandatory": false
       }
     ],
     "assigned_programmers": [
       {
-        "programmer_name": "Matthew Ramsey",
-        "programmer_id": 5,
-        "assignment_start_date": "2024-02-23",
-        "assignment_end_date": "2024-07-29"
+        "programmer_name": "Anne Evans",
+        "programmer_id": 20,
+        "assignment_start_date": "2025-06-11",
+        "assignment_end_date": "2026-11-21"
       },
       {
-        "programmer_name": "James Dickerson",
-        "programmer_id": 2,
-        "assignment_start_date": "2024-02-23",
-        "assignment_end_date": "2024-07-29"
+        "programmer_name": "Stephen Choi",
+        "programmer_id": 11,
+        "assignment_start_date": "2025-06-11",
+        "assignment_end_date": "2026-11-13"
       },
       {
-        "programmer_name": "Christina Beltran",
-        "programmer_id": 8,
-        "assignment_start_date": "2024-02-23",
-        "assignment_end_date": "2024-07-31"
+        "programmer_name": "Angela White",
+        "programmer_id": 27,
+        "assignment_start_date": "2025-06-11",
+        "assignment_end_date": "2026-11-24"
       }
     ]
+  },
+  {
+    "id": "PRJ-006",
+    "name": "Microservices Architecture for EduTech Solutions",
+    "client": "TechCorp",
+    "description": "Development of web application with focus on scalability and performance",
+    "start_date": "2025-09-18",
+    "end_date": null,
+    "estimated_duration_months": 3,
+    "budget": 429140,
+    "status": "active",
+    "team_size": 8,
+    "requirements": [
+      {
+        "skill_name": "Docker",
+        "min_proficiency": "Beginner",
+        "is_mandatory": false
+      },
+      {
+        "skill_name": "Go",
+        "min_proficiency": "Advanced",
+        "is_mandatory": false
+      }
+    ],
+    "assigned_programmers": [
+      {
+        "programmer_name": "Kayla Ford",
+        "programmer_id": 14,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-12-13"
+      },
+      {
+        "programmer_name": "Julie Davenport",
+        "programmer_id": 2,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-11-27"
+      },
+      {
+        "programmer_name": "Hannah Pena",
+        "programmer_id": 7,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-11-19"
+      },
+      {
+        "programmer_name": "Dominic Fuller",
+        "programmer_id": 30,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-12-05"
+      },
+      {
+        "programmer_name": "Felicia Singh",
+        "programmer_id": 23,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-11-30"
+      },
+      {
+        "programmer_name": "Deborah Harris",
+        "programmer_id": 3,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-12-05"
+      },
+      {
+        "programmer_name": "Andrew Golden",
+        "programmer_id": 4,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-12-10"
+      },
+      {
+        "programmer_name": "Mckenzie Hall",
+        "programmer_id": 21,
+        "assignment_start_date": "2025-09-18",
+        "assignment_end_date": "2025-11-19"
+      }
+    ]
+  },
+  {
+    "id": "PRJ-007",
+    "name": "Real-time Chat System for MediaStream",
+    "client": "LogisticsPro",
+    "description": "Development of machine learning pipeline with focus on scalability and performance",
+    "start_date": "2024-06-24",
+    "end_date": "2025-07-19",
+    "estimated_duration_months": 13,
+    "budget": 224872,
+    "status": "completed",
+    "team_size": 7,
+    "requirements": [
+      {
+        "skill_name": "MongoDB",
+        "min_proficiency": "Beginner",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Python",
+        "min_proficiency": "Beginner",
+        "is_mandatory": false
+      }
+    ],
+    "assigned_programmers": [
+      {
+        "programmer_name": "Jacob Long",
+        "programmer_id": 17,
+        "assignment_start_date": "2024-06-24",
+        "assignment_end_date": "2025-07-06"
+      },
+      {
+        "programmer_name": "Leslie Jackson",
+        "programmer_id": 29,
+        "assignment_start_date": "2024-06-24",
+        "assignment_end_date": "2025-07-01"
+      },
+      {
+        "programmer_name": "Melissa Rivera",
+        "programmer_id": 15,
+        "assignment_start_date": "2024-06-24",
+        "assignment_end_date": "2025-07-08"
+      }
+    ]
+  },
+  {
+    "id": "PRJ-008",
+    "name": "E-commerce Platform for EduTech Solutions",
+    "client": "HealthTech Partners",
+    "description": "Development of e-commerce platform with focus on scalability and performance",
+    "start_date": "2025-07-10",
+    "end_date": null,
+    "estimated_duration_months": 13,
+    "budget": null,
+    "status": "planned",
+    "team_size": 2,
+    "requirements": [
+      {
+        "skill_name": "FastAPI",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Rust",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Microservices",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": false
+      }
+    ],
+    "assigned_programmers": []
+  },
+  {
+    "id": "PRJ-009",
+    "name": "Mobile App Development for EduTech Solutions",
+    "client": "TechCorp",
+    "description": "Development of api gateway implementation with focus on scalability and performance",
+    "start_date": "2025-11-19",
+    "end_date": null,
+    "estimated_duration_months": 14,
+    "budget": null,
+    "status": "active",
+    "team_size": 5,
+    "requirements": [
+      {
+        "skill_name": "JavaScript",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "Java",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      }
+    ],
+    "assigned_programmers": []
+  },
+  {
+    "id": "PRJ-010",
+    "name": "Cloud Migration for GreenEnergy Co",
+    "client": "BioTech Labs",
+    "description": "Development of real-time chat system with focus on scalability and performance",
+    "start_date": "2025-08-14",
+    "end_date": null,
+    "estimated_duration_months": 6,
+    "budget": 134634,
+    "status": "on_hold",
+    "team_size": 5,
+    "requirements": [
+      {
+        "skill_name": "Machine Learning",
+        "min_proficiency": "Intermediate",
+        "is_mandatory": false
+      },
+      {
+        "skill_name": "Node.js",
+        "min_proficiency": "Advanced",
+        "is_mandatory": false
+      },
+      {
+        "skill_name": "MongoDB",
+        "min_proficiency": "Advanced",
+        "is_mandatory": true
+      },
+      {
+        "skill_name": "JavaScript",
+        "min_proficiency": "Beginner",
+        "is_mandatory": false
+      }
+    ],
+    "assigned_programmers": []
   }
 ]

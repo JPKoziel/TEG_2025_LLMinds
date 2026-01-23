@@ -11,10 +11,10 @@
 
 [generation]
 # Number of programmer profiles to generate
-num_programmers = 10
+num_programmers = 30
 
 # Number of project records to generate
-num_projects = 3
+num_projects = 10
 
 # Number of RFP documents to generate
 num_rfps = 3

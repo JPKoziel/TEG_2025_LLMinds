@@ -6,6 +6,11 @@ Naive RAG Baseline for CV Data
 Traditional vector-based RAG system using ChromaDB for similarity search.
 This serves as the baseline comparison against GraphRAG to demonstrate
 the limitations of naive RAG for structured queries.
+
+Fixes:
+- Make config path robust when running from repo root (default config is src/utils/config.toml)
+- Resolve relative paths from config relative to src/ (not current working directory)
+- Store vector DB and results under src/ to avoid CWD-dependent behavior
 """
 
 from dotenv import load_dotenv
@@ -31,11 +36,23 @@ from langchain_core.output_parsers import StrOutputParser
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class NaiveRAGSystem:
     """Traditional RAG system using vector similarity search."""
 
-    def __init__(self, config_path: str = "utils/config.toml"):
-        """Initialize the Naive RAG system."""
+    def __init__(self, config_path: Optional[str] = None):
+        """
+        Initialize the Naive RAG system.
+
+        Default behavior:
+        - If config_path is not provided, load from: src/utils/config.toml
+        - Resolve relative paths in config relative to src/
+        """
+        self.src_dir = Path(__file__).resolve().parent  # .../repo/src
+
+        if config_path is None:
+            config_path = str(self.src_dir / "utils" / "config.toml")
+
         self.config = self._load_config(config_path)
 
         self.embeddings = OpenAIEmbeddings(
@@ -56,10 +73,13 @@ class NaiveRAGSystem:
             separators=["\n\n", "\n", " ", ""]
         )
 
-        # Directories
-        self.data_dir = Path(self.config['output']['programmers_dir'])
-        self.vector_db_dir = Path("./chroma_naive_rag_cv")
-        self.results_dir = Path("results")
+        # Directories (resolved relative to src/)
+        self.data_dir = Path(self.config["output"]["programmers_dir"])
+        if not self.data_dir.is_absolute():
+            self.data_dir = (self.src_dir / self.data_dir).resolve()
+
+        self.vector_db_dir = (self.src_dir / "chroma_naive_rag_cv").resolve()
+        self.results_dir = (self.src_dir / "results").resolve()
         self.results_dir.mkdir(exist_ok=True)
 
         # Will be initialized when needed
@@ -68,13 +88,18 @@ class NaiveRAGSystem:
         self.rag_chain = None
 
         logger.info("✓ Naive RAG System initialized")
+        logger.info(f"  - CV directory: {self.data_dir}")
+        logger.info(f"  - Vector DB dir: {self.vector_db_dir}")
+        logger.info(f"  - Results dir: {self.results_dir}")
 
     def _load_config(self, config_path: str) -> dict:
         """Load configuration from TOML file."""
+        config_path = str(Path(config_path).resolve())
+
         if not os.path.exists(config_path):
             raise ValueError(f"Configuration file not found: {config_path}")
 
-        with open(config_path, 'r') as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             config = toml.load(f)
 
         return config
@@ -278,11 +303,9 @@ Context from CVs:
             return {"error": "Vector store not initialized"}
 
         try:
-            # Get collection info
             collection = self.vectorstore._collection
             total_chunks = collection.count()
 
-            # Get sample of source files
             sample_results = self.vectorstore.similarity_search("", k=10)
             source_files = set()
             for doc in sample_results:
@@ -307,25 +330,21 @@ def test_naive_rag_system():
     print("Testing Naive RAG System")
     print("=" * 30)
 
-    # Initialize system
     rag_system = NaiveRAGSystem()
 
     if not rag_system.initialize_system():
         print("❌ Failed to initialize system")
         return
 
-    # Show database stats
     stats = rag_system.get_database_stats()
     print(f"\nDatabase Statistics:")
     print(f"Total chunks: {stats.get('total_chunks', 'unknown')}")
     print(f"Sample files: {', '.join(stats.get('sample_source_files', [])[:3])}")
 
-    # Validate system
     if not rag_system.validate_system():
         print("❌ System validation failed")
         return
 
-    # Test queries representing different types
     test_queries = [
         "How many people have Python skills?",
         "List people with AWS certifications",
@@ -351,9 +370,8 @@ def test_naive_rag_system():
         else:
             print(f"❌ Error: {result['answer']}")
 
-    # Save test results
     output_file = Path("results") / "naive_rag_test_results.json"
-    with open(output_file, 'w') as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         json.dump({
             "test_metadata": {
                 "system_type": "naive_rag",
@@ -372,10 +390,7 @@ def main():
     print("Naive RAG Baseline System for CV Data")
     print("=" * 40)
 
-    # Ensure results directory exists
     os.makedirs("results", exist_ok=True)
-
-    # Test the system
     test_naive_rag_system()
 
 
