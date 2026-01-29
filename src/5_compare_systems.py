@@ -99,7 +99,7 @@ class SystemComparator:
         try:
             # Import the GraphRAG system dynamically
             spec = importlib.util.spec_from_file_location(
-                "graph_rag_module", "3_query_knowledge_graph.py"
+                "graph_rag_module", "query_knowledge_graph_3.py"
             )
             graph_rag_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(graph_rag_module)
@@ -117,7 +117,7 @@ class SystemComparator:
         try:
             # Import the Naive RAG system dynamically
             spec = importlib.util.spec_from_file_location(
-                "naive_rag_module", "4_naive_rag_cv.py"
+                "naive_rag_module", "naive_rag_cv_4.py"
             )
             naive_rag_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(naive_rag_module)
